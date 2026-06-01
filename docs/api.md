@@ -2,7 +2,7 @@
 
 Complete API reference with request/response examples.
 
-**For architecture overview:** See [ARCHITECTURE.md](ARCHITECTURE.md)
+**For architecture overview:** See [architecture.md](architecture.md)
 
 ## Base URL
 

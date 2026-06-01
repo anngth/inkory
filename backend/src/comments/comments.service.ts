@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Comment } from "../entities/comment.entity";
@@ -36,8 +36,10 @@ export class CommentsService {
     return this.commentRepository.save(comment);
   }
 
-  async findByArticle(articleId: string) {
-    return this.commentRepository
+  async findByArticle(articleId: string, page = 1, limit = 20) {
+    const skip = (page - 1) * limit;
+
+    const [items, total] = await this.commentRepository
       .createQueryBuilder("comment")
       .leftJoin("comment.author", "author")
       .addSelect([
@@ -48,7 +50,17 @@ export class CommentsService {
       ])
       .where("comment.articleId = :articleId", { articleId })
       .orderBy("comment.createdAt", "DESC")
-      .getMany();
+      .take(limit)
+      .skip(skip)
+      .getManyAndCount();
+
+    return {
+      items,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async remove(id: string, userId: string) {
@@ -61,7 +73,7 @@ export class CommentsService {
     }
 
     if (comment.authorId !== userId) {
-      throw new ForbiddenException("You can only delete your own comments");
+      throw new NotFoundException("Comment not found");
     }
 
     await this.commentRepository.remove(comment);
