@@ -37,9 +37,7 @@ export default function SettingsPage() {
     formData.append("image", file);
 
     try {
-      const response = await api.post("/upload/image", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await api.post("/upload/image", formData);
       setAvatar(response.data.url);
     } catch (error) {
       console.error("Failed to upload avatar:", error);

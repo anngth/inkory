@@ -47,7 +47,7 @@ CLOUDINARY_API_KEY=<your-api-key>
 CLOUDINARY_API_SECRET=<your-api-secret>
 
 NODE_ENV=production
-PORT=3001
+PORT=3000
 ```
 
 #### 5. Add PostgreSQL
@@ -155,7 +155,7 @@ server {
     server_name your-domain.com;
 
     location / {
-        proxy_pass http://localhost:3001;
+        proxy_pass http://localhost:3000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -199,7 +199,6 @@ sudo certbot --nginx -d your-domain.com
 - Root Directory: frontend
 - Build Command: `npm run build`
 - Output Directory: `dist`
-- Output Directory: `.next`
 
 #### 4. Set Environment Variables
 
@@ -363,7 +362,7 @@ SELECT pg_size_pretty(pg_database_size('inkory_db'));
 pm2 logs
 
 # Check port
-lsof -i :3001
+lsof -i :3000
 
 # Check environment variables
 echo $DATABASE_HOST

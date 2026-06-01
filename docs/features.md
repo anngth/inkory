@@ -134,15 +134,15 @@
 - `/` - Home (latest articles)
 - `/login` - Login page
 - `/register` - Registration page
-- `/article/[id]` - Article detail page
-- `/profile/[username]` - User profile page
-- `/tag/[name]` - Tag page
+- `/article/:id` - Article detail page
+- `/profile/:username` - User profile page
+- `/tag/:name` - Tag page
 - `/search` - Search page
 
 #### Protected Pages (require login):
 
 - `/write` - Create new article
-- `/article/[id]/edit` - Edit article
+- `/article/:id/edit` - Edit article
 - `/feed` - Personalized feed
 - `/bookmarks` - Saved articles
 - `/settings` - User settings
@@ -194,11 +194,12 @@ backend/
 
 ```
 frontend/
-├── src/                # Source files
-├── components/         # Reusable components
-├── lib/               # Utilities & API client
-├── store/             # Zustand state
-└── types/             # TypeScript types
+├── src/
+│   ├── components/     # Reusable components
+│   ├── pages/          # Page components
+│   ├── lib/            # Utilities & API client
+│   ├── store/          # Zustand state
+│   └── types/          # TypeScript types
 ```
 
 ### 🎯 User Flows

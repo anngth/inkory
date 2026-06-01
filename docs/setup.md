@@ -37,7 +37,7 @@ DATABASE_URL=postgresql://user:pass@localhost:5432/inkory_db
 PORT=3000
 NODE_ENV=development
 JWT_EXPIRES_IN=7d
-FRONTEND_URL=http://localhost:3001
+FRONTEND_URL=http://localhost:5173
 ENABLE_SWAGGER=true
 
 # Cloudinary (for image uploads)
@@ -144,10 +144,12 @@ inkory/
 │   └── .env             # Config
 │
 ├── frontend/            # Vite App (Port 5173)
-│   ├── src/            # Source files
-│   ├── components/     # React components
-│   ├── lib/            # API client
-│   ├── store/          # Zustand stores
+│   ├── src/
+│   │   ├── components/ # React components
+│   │   ├── pages/      # Page components
+│   │   ├── lib/        # API client
+│   │   ├── store/      # Zustand stores
+│   │   └── types/      # TypeScript types
 │   └── .env.local      # Config
 │
 └── docs/               # Documentation
@@ -219,10 +221,10 @@ npm run build
 
 ## Next Steps
 
-1. **Understand architecture** → [ARCHITECTURE.md](ARCHITECTURE.md)
-2. **Review security** → [SECURITY.md](SECURITY.md)
-3. **Check API endpoints** → [ARCHITECTURE.md#api-endpoints](ARCHITECTURE.md#api-endpoints)
-4. **See features** → [FEATURES.md](FEATURES.md)
+1. **Understand architecture** → [architecture.md](architecture.md)
+2. **Review security** → [security.md](security.md)
+3. **Check API endpoints** → [architecture.md#api-endpoints](architecture.md#api-endpoints)
+4. **See features** → [features.md](features.md)
 
 ## Testing
 
@@ -252,10 +254,10 @@ curl http://localhost:3000/articles
 
 ## Production Setup
 
-See [DEPLOYMENT.md](DEPLOYMENT.md) for production deployment guide.
+See [deployment.md](deployment.md) for production deployment guide.
 
 ## Support
 
-- **Setup issues:** Check [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
-- **Architecture questions:** See [ARCHITECTURE.md](ARCHITECTURE.md)
-- **Security questions:** See [SECURITY.md](SECURITY.md)
+- **Setup issues:** Check [troubleshooting.md](troubleshooting.md)
+- **Architecture questions:** See [architecture.md](architecture.md)
+- **Security questions:** See [security.md](security.md)
