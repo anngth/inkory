@@ -3,6 +3,7 @@
 ## ✨ Complete Features
 
 ### 🔐 Authentication & Authorization
+
 - ✅ Email/Password registration
 - ✅ JWT-based authentication
 - ✅ Protected routes
@@ -10,6 +11,7 @@
 - ✅ Secure password hashing (bcrypt)
 
 ### 📝 Article Management
+
 - ✅ Create new articles with Markdown
 - ✅ Live preview while writing
 - ✅ Syntax highlighting for code blocks
@@ -22,6 +24,7 @@
 - ✅ Rich text formatting with Markdown
 
 ### 👏 Engagement Features
+
 - ✅ **Claps System** (Engagement feature)
   - Each user can clap up to 50 times per article
   - Real-time claps counter
@@ -36,6 +39,7 @@
   - Easy bookmark toggle
 
 ### 👥 Social Features
+
 - ✅ **Follow System**
   - Follow/Unfollow users
   - Display followers/following count
@@ -49,6 +53,7 @@
   - Sorted by newest
 
 ### 🏷️ Content Organization
+
 - ✅ **Tags System**
   - Add multiple tags to articles
   - Filter articles by tag
@@ -60,6 +65,7 @@
   - Search results with pagination
 
 ### 🖼️ Media Upload
+
 - ✅ **Cloudinary Integration**
   - Upload avatar images
   - Upload cover images
@@ -71,6 +77,7 @@
   - Remove uploaded images
 
 ### 📊 Stats & Analytics
+
 - ✅ View counts
 - ✅ Reading time calculation
 - ✅ Claps analytics
@@ -78,6 +85,7 @@
 - ✅ Follower stats
 
 ### 🎨 UI/UX Features
+
 - ✅ **Responsive Design**
   - Mobile-friendly
   - Tablet optimized
@@ -94,6 +102,7 @@
   - Back navigation
 
 ### 🔍 Content Discovery
+
 - ✅ Home page with latest articles
 - ✅ Personalized feed
 - ✅ Tag-based discovery
@@ -102,13 +111,15 @@
 - ✅ Popular tags
 
 ### ⚡ Performance
-- ✅ Next.js App Router (RSC)
+
+- ✅ Vite fast HMR
 - ✅ API pagination
 - ✅ Lazy loading
 - ✅ Image optimization
 - ✅ Code splitting
 
 ### 🛡️ Security
+
 - ✅ JWT token authentication
 - ✅ Password hashing
 - ✅ CORS configuration
@@ -119,6 +130,7 @@
 ### 📱 Pages
 
 #### Public Pages:
+
 - `/` - Home (latest articles)
 - `/login` - Login page
 - `/register` - Registration page
@@ -128,6 +140,7 @@
 - `/search` - Search page
 
 #### Protected Pages (require login):
+
 - `/write` - Create new article
 - `/article/[id]/edit` - Edit article
 - `/feed` - Personalized feed
@@ -137,6 +150,7 @@
 ### 🔧 Technical Stack
 
 #### Backend:
+
 - **Framework**: NestJS 10.x
 - **Database**: PostgreSQL with TypeORM
 - **Authentication**: JWT + Passport
@@ -145,7 +159,8 @@
 - **File Upload**: Cloudinary
 
 #### Frontend:
-- **Framework**: Next.js 14 (App Router)
+
+- **Framework**: Vite + React 19
 - **Language**: TypeScript
 - **Styling**: TailwindCSS
 - **State Management**: Zustand
@@ -157,6 +172,7 @@
 ### 📐 Architecture
 
 #### Backend Structure:
+
 ```
 backend/
 ├── src/
@@ -175,9 +191,10 @@ backend/
 ```
 
 #### Frontend Structure:
+
 ```
 frontend/
-├── app/                # Next.js App Router pages
+├── src/                # Source files
 ├── components/         # Reusable components
 ├── lib/               # Utilities & API client
 ├── store/             # Zustand state
@@ -187,6 +204,7 @@ frontend/
 ### 🎯 User Flows
 
 #### New User:
+
 1. Visit homepage → View articles
 2. Click "Get started" → Register
 3. Login → Redirected to home
@@ -194,6 +212,7 @@ frontend/
 5. Publish → Article appears in feed
 
 #### Reader:
+
 1. Browse home/feed
 2. Click article → Read
 3. Clap if liked
@@ -202,6 +221,7 @@ frontend/
 6. Follow author
 
 #### Writer:
+
 1. Click "Write"
 2. Add title, content (Markdown)
 3. Upload cover image

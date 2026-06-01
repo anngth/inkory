@@ -1,6 +1,8 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { TagsService } from './tags.service';
+import { PopularTagsQueryDto } from '../common/dto/popular-tags-query.dto';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @ApiTags('tags')
 @Controller('tags')
@@ -15,14 +17,13 @@ export class TagsController {
 
   @Get('popular')
   @ApiOperation({ summary: 'Get popular tags' })
-  @ApiQuery({ name: 'limit', required: false, type: Number })
-  async findPopular(@Query('limit') limit?: number) {
-    return this.tagsService.findPopular(limit);
+  async findPopular(@Query() query: PopularTagsQueryDto) {
+    return this.tagsService.findPopular(query.limit);
   }
 
   @Get(':name')
-  @ApiOperation({ summary: 'Get tag by name' })
-  async findOne(@Param('name') name: string) {
-    return this.tagsService.findOne(name);
+  @ApiOperation({ summary: 'Get tag by name with articles' })
+  async findOne(@Param('name') name: string, @Query() query: PaginationQueryDto) {
+    return this.tagsService.findOne(name, query.page, query.limit);
   }
 }

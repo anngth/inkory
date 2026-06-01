@@ -34,6 +34,7 @@ Thank you for your interest in contributing to Inkory! This document provides gu
 ## Development Setup
 
 ### Prerequisites
+
 - Node.js 18+
 - PostgreSQL 14+
 - Git
@@ -62,24 +63,28 @@ npm run dev
 ## Coding Standards
 
 ### TypeScript
+
 - Use strict mode: `"strict": true`
 - Avoid `any` types
 - Use interfaces for object types
 - Add JSDoc comments for public functions
 
 ### Backend (NestJS)
+
 - Follow NestJS module structure
 - Use dependency injection
 - Add validation with class-validator
 - Write unit tests for services
 
-### Frontend (Next.js)
+### Frontend
+
 - Use functional components
 - Follow React hooks best practices
 - Use TypeScript for type safety
 - Keep components small and focused
 
 ### Code Style
+
 - Use Prettier for formatting
 - Use ESLint for linting
 - Max line length: 100 characters
@@ -100,6 +105,7 @@ npm run dev
 ```
 
 ### Types
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation
@@ -122,18 +128,21 @@ docs(setup): update installation guide
 ## Pull Request Process
 
 1. **Update your branch**
+
    ```bash
    git fetch upstream
    git rebase upstream/main
    ```
 
 2. **Run tests**
+
    ```bash
    npm run test
    npm run lint
    ```
 
 3. **Push to your fork**
+
    ```bash
    git push origin feature/your-feature-name
    ```
@@ -158,6 +167,7 @@ docs(setup): update installation guide
 ## Testing
 
 ### Backend Tests
+
 ```bash
 cd backend
 npm run test
@@ -165,6 +175,7 @@ npm run test:e2e
 ```
 
 ### Frontend Tests
+
 ```bash
 cd frontend
 npm run test

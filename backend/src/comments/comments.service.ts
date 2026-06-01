@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Comment } from '../entities/comment.entity';
-import { Article } from '../entities/article.entity';
-import { CreateCommentDto } from './dto/create-comment.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Comment } from "../entities/comment.entity";
+import { Article } from "../entities/article.entity";
+import { CreateCommentDto } from "./dto/create-comment.dto";
 
 @Injectable()
 export class CommentsService {
@@ -24,7 +24,7 @@ export class CommentsService {
     });
 
     if (!article) {
-      throw new NotFoundException('Article not found');
+      throw new NotFoundException("Article not found");
     }
 
     const comment = this.commentRepository.create({
@@ -37,11 +37,18 @@ export class CommentsService {
   }
 
   async findByArticle(articleId: string) {
-    return this.commentRepository.find({
-      where: { articleId },
-      relations: ['author'],
-      order: { createdAt: 'DESC' },
-    });
+    return this.commentRepository
+      .createQueryBuilder("comment")
+      .leftJoin("comment.author", "author")
+      .addSelect([
+        "author.id",
+        "author.username",
+        "author.avatar",
+        "author.bio",
+      ])
+      .where("comment.articleId = :articleId", { articleId })
+      .orderBy("comment.createdAt", "DESC")
+      .getMany();
   }
 
   async remove(id: string, userId: string) {
@@ -50,15 +57,15 @@ export class CommentsService {
     });
 
     if (!comment) {
-      throw new NotFoundException('Comment not found');
+      throw new NotFoundException("Comment not found");
     }
 
     if (comment.authorId !== userId) {
-      throw new NotFoundException('You can only delete your own comments');
+      throw new NotFoundException("You can only delete your own comments");
     }
 
     await this.commentRepository.remove(comment);
 
-    return { message: 'Comment deleted successfully' };
+    return { message: "Comment deleted successfully" };
   }
 }

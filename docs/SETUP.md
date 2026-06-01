@@ -1,268 +1,261 @@
-# Inkory - Setup Guide
+# Setup Guide
 
-Detailed guide to install and run Inkory project.
+Get Inkory running locally in 5 minutes.
 
-## 📋 System Requirements
+## Prerequisites
 
-- **Node.js**: version 18.x or higher
-- **npm** or **yarn**: package manager
-- **PostgreSQL**: version 14.x or higher
-- **Cloudinary Account**: for image uploads (free)
-
-## 🚀 Step 1: Install PostgreSQL
-
-### macOS (using Homebrew):
 ```bash
-brew install postgresql@14
-brew services start postgresql@14
+node --version  # 20+
+psql --version  # 14+
+npm --version   # 10+
 ```
 
-### Create database:
+## Quick Setup
+
+### 1. Database
+
 ```bash
-# Connect to PostgreSQL
-psql postgres
-
-# Create database
-CREATE DATABASE inkory_db;
-
-# Create user (optional)
-CREATE USER your_username WITH PASSWORD 'your_password';
-GRANT ALL PRIVILEGES ON DATABASE inkory_db TO your_username;
-
-# Exit
-\q
+createdb inkory_db
 ```
 
-## 📦 Step 2: Setup Backend (NestJS)
+### 2. Backend (Port 3000)
 
-### 1. Navigate to backend folder:
 ```bash
 cd backend
-```
-
-### 2. Install dependencies:
-```bash
 npm install
-```
-
-### 3. Create .env file:
-```bash
 cp .env.example .env
 ```
 
-### 4. Configure .env file:
-Open `.env` file and fill in the information:
+Edit `.env`:
 
-```env
-# Database
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_USER=postgres
-DATABASE_PASSWORD=your_password
-DATABASE_NAME=inkory_db
+```bash
+# Required
+JWT_SECRET=$(openssl rand -base64 32)  # Generate strong secret
+DATABASE_URL=postgresql://user:pass@localhost:5432/inkory_db
 
-# JWT
-JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
+# Optional (defaults shown)
+PORT=3000
+NODE_ENV=development
 JWT_EXPIRES_IN=7d
+FRONTEND_URL=http://localhost:3001
+ENABLE_SWAGGER=true
 
-# Cloudinary (will setup later)
+# Cloudinary (for image uploads)
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
-
-# Server
-PORT=3001
-NODE_ENV=development
 ```
 
-### 5. Start backend server:
+Start backend:
+
 ```bash
-npm run start:dev
+npm run start:dev  # http://localhost:3000
 ```
 
-Backend will run at: `http://localhost:3001`
-Swagger API docs: `http://localhost:3001/api`
+### 3. Frontend (Port 5173)
 
-## 🎨 Step 3: Setup Frontend (Next.js)
-
-### 1. Open new terminal and navigate to frontend folder:
 ```bash
 cd frontend
-```
-
-### 2. Install dependencies:
-```bash
 npm install
-```
-
-### 3. Create .env.local file:
-```bash
 cp .env.local.example .env.local
 ```
 
-### 4. Configure .env.local file:
-```env
-NEXT_PUBLIC_API_URL=http://localhost:3001
-```
+Edit `.env.local`:
 
-### 5. Start frontend server:
 ```bash
-npm run dev
+VITE_API_URL=http://localhost:3000
 ```
 
-Frontend will run at: `http://localhost:3000`
+Start frontend:
 
-## ☁️ Step 4: Setup Cloudinary (For image uploads)
-
-### 1. Create free account:
-- Visit: https://cloudinary.com/
-- Sign up for free account
-
-### 2. Get credentials:
-- After login, go to Dashboard
-- Copy the information:
-  - **Cloud Name**
-  - **API Key**
-  - **API Secret**
-
-### 3. Update backend .env:
-Paste the information into `backend/.env` file:
-```env
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-```
-
-### 4. Restart backend server:
 ```bash
-# In backend terminal, stop server (Ctrl+C) and restart
-npm run start:dev
+npm run dev  # http://localhost:5173
 ```
 
-## ✅ Verify Installation
+## Verify Setup
 
-### 1. Check Backend:
-- Open browser: `http://localhost:3001/api`
-- You will see Swagger API documentation
+### Backend Health Check
 
-### 2. Check Frontend:
-- Open browser: `http://localhost:3000`
-- You will see the Inkory home page
-
-### 3. Test user registration:
-- Click "Get started" or visit: `http://localhost:3000/register`
-- Create new account
-- Login and test features
-
-## 🧪 Test Main Features
-
-1. **Register / Login**: ✓
-2. **Write blog with Markdown**: Visit `/write`
-3. **Upload images**: Test cover image and editor images
-4. **Claps**: Click clap on articles
-5. **Comments**: Write comments on articles
-6. **Bookmarks**: Bookmark articles
-7. **Follow users**: Follow other authors
-8. **Search**: Search for articles
-9. **Tags**: Filter by tags
-10. **Feed**: View feed from followed users
-
-## 🐛 Troubleshooting
-
-### Backend cannot connect to database:
 ```bash
-# Check if PostgreSQL is running
-brew services list | grep postgresql
-
-# Start PostgreSQL if not running
-brew services start postgresql@14
-
-# Test connection
-psql -U postgres -d inkory_db
+curl http://localhost:3000/articles
+# Expected: {"data":[],"meta":{...}}
 ```
 
-### Port already in use:
-```bash
-# Find process using port 3001
-lsof -i :3001
+### Swagger Docs
 
+Open http://localhost:3000/api (dev only)
+
+### Frontend
+
+Open http://localhost:5173
+
+## Development Workflow
+
+### Backend Commands
+
+```bash
+npm run start:dev      # Watch mode
+npm run build          # Production build
+npm run start:prod     # Production mode
+npm test               # Unit tests
+npm run test:e2e       # E2E tests
+npm run test:cov       # Coverage
+```
+
+### Frontend Commands
+
+```bash
+npm run dev            # Development
+npm run build          # Production build
+npm run start          # Production mode
+npm run lint           # Lint check
+```
+
+### Database Commands
+
+```bash
+# Migrations (auto-run on start)
+npm run migration:generate -- -n MigrationName
+npm run migration:run
+npm run migration:revert
+
+# Seed data
+npm run seed
+```
+
+## Project Structure
+
+```
+inkory/
+├── backend/              # NestJS API (Port 3000)
+│   ├── src/
+│   │   ├── main.ts      # Entry point
+│   │   ├── entities/    # TypeORM models
+│   │   ├── articles/    # Articles module
+│   │   ├── auth/        # JWT auth
+│   │   ├── users/       # Users module
+│   │   ├── comments/    # Comments module
+│   │   ├── claps/       # Claps module
+│   │   ├── bookmarks/   # Bookmarks module
+│   │   ├── follows/     # Follows module
+│   │   ├── tags/        # Tags module
+│   │   ├── upload/      # File upload
+│   │   └── common/      # Shared DTOs
+│   └── .env             # Config
+│
+├── frontend/            # Vite App (Port 5173)
+│   ├── src/            # Source files
+│   ├── components/     # React components
+│   ├── lib/            # API client
+│   ├── store/          # Zustand stores
+│   └── .env.local      # Config
+│
+└── docs/               # Documentation
+```
+
+## Environment Variables
+
+### Backend Required
+
+- `JWT_SECRET` - Min 32 chars (fails fast if missing)
+- `DATABASE_URL` - PostgreSQL connection string
+
+### Backend Optional
+
+- `PORT` - Default: 3000
+- `NODE_ENV` - Default: development
+- `JWT_EXPIRES_IN` - Default: 7d
+- `FRONTEND_URL` - Default: http://localhost:5173
+- `ENABLE_SWAGGER` - Default: true (auto-disabled in production)
+
+### Frontend Required
+
+- `VITE_API_URL` - Backend URL (default: http://localhost:3000)
+
+## Common Issues
+
+### Port Already in Use
+
+```bash
+# Check what's using port 3000
+lsof -i :3000
 # Kill process
 kill -9 <PID>
-
-# Or change port in backend/.env
-PORT=3002
 ```
 
-### Frontend cannot connect to Backend:
-- Check backend is running: `http://localhost:3001/api`
-- Check `frontend/.env.local` has correct backend URL
-- Clear browser cache and reload
+### Database Connection Failed
 
-### CORS Error:
-- Backend already configured CORS for `http://localhost:3000`
-- If using different port, update in `backend/src/main.ts`
+```bash
+# Check PostgreSQL is running
+psql -d inkory_db -c "SELECT 1"
 
-## 📚 Main API Endpoints
+# Check DATABASE_URL in .env
+grep DATABASE_URL backend/.env
+```
 
-### Authentication:
-- `POST /auth/register` - Register
-- `POST /auth/login` - Login
+### JWT_SECRET Missing
 
-### Articles:
-- `GET /articles` - Get articles list
-- `GET /articles/:id` - Article details
-- `POST /articles` - Create new article (requires auth)
-- `PUT /articles/:id` - Update article (requires auth)
-- `DELETE /articles/:id` - Delete article (requires auth)
-- `GET /articles/search?q=query` - Search
-- `GET /articles/feed` - Feed (requires auth)
+```bash
+# Generate and add to .env
+echo "JWT_SECRET=$(openssl rand -base64 32)" >> backend/.env
+```
 
-### Comments:
-- `GET /articles/:articleId/comments` - Get comments
-- `POST /articles/:articleId/comments` - Create comment (requires auth)
+### CORS Errors
 
-### Claps:
-- `POST /articles/:articleId/claps` - Clap article (requires auth)
-- `GET /articles/:articleId/claps` - Get claps count
+```bash
+# Check FRONTEND_URL in backend/.env
+# Should match frontend URL
+grep FRONTEND_URL backend/.env
+```
 
-### User:
-- `GET /users/profile` - Current user profile (requires auth)
-- `PUT /users/profile` - Update profile (requires auth)
-- `GET /users/:username` - Other user profile
+### Build Errors
 
-### Upload:
-- `POST /upload/image` - Upload image (requires auth)
+```bash
+# Clear cache and rebuild
+rm -rf node_modules package-lock.json
+npm install
+npm run build
+```
 
-## 🚀 Production Deployment
+## Next Steps
 
-### Backend (Railway/Render):
-1. Push code to Git
-2. Connect Git repo with Railway/Render
-3. Set environment variables
-4. Deploy
+1. **Understand architecture** → [ARCHITECTURE.md](ARCHITECTURE.md)
+2. **Review security** → [SECURITY.md](SECURITY.md)
+3. **Check API endpoints** → [ARCHITECTURE.md#api-endpoints](ARCHITECTURE.md#api-endpoints)
+4. **See features** → [FEATURES.md](FEATURES.md)
 
-### Frontend (Vercel):
-1. Push code to Git
-2. Import project into Vercel
-3. Set `NEXT_PUBLIC_API_URL` = backend production URL
-4. Deploy
+## Testing
 
-## 📝 Notes
+### Run Security Tests
 
-- Database will auto-sync when `NODE_ENV=development`
-- In production use migrations instead of sync
-- JWT token expires after 7 days (config in .env)
-- Maximum claps per user: 50 (engagement feature)
-- Images uploaded via Cloudinary have free tier limits
+```bash
+./test-security-fixes.sh
+```
 
-## 💡 Tips
+### Manual API Tests
 
-1. Use Swagger docs to test API: `http://localhost:3001/api`
-2. Check backend logs for debugging
-3. Use PostgreSQL GUI tool like pgAdmin or TablePlus to view database
-4. Enable React DevTools for frontend debugging
-5. Check Network tab in browser for API debugging
+```bash
+# Register
+curl -X POST http://localhost:3000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"test123","username":"testuser"}'
 
-## 🎉 Happy Coding!
+# Login
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"test123"}'
+# Returns: {"access_token":"..."}
 
-If you encounter any issues, check each step again or review logs for debugging.
+# List articles
+curl http://localhost:3000/articles
+```
+
+## Production Setup
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for production deployment guide.
+
+## Support
+
+- **Setup issues:** Check [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+- **Architecture questions:** See [ARCHITECTURE.md](ARCHITECTURE.md)
+- **Security questions:** See [SECURITY.md](SECURITY.md)

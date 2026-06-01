@@ -9,6 +9,7 @@ Common issues and solutions for Inkory.
 **Error:** `connect ECONNREFUSED 127.0.0.1:5432`
 
 **Solutions:**
+
 ```bash
 # Check if PostgreSQL is running
 brew services list | grep postgresql
@@ -25,6 +26,7 @@ psql -U postgres -d inkory_db
 **Error:** `database "inkory_db" already exists`
 
 **Solution:**
+
 ```bash
 # Drop existing database
 psql postgres
@@ -38,6 +40,7 @@ CREATE DATABASE inkory_db;
 **Error:** `listen EADDRINUSE :::5432`
 
 **Solution:**
+
 ```bash
 # Find process using port
 lsof -i :5432
@@ -55,6 +58,7 @@ kill -9 <PID>
 **Error:** `Cannot find module '@nestjs/core'`
 
 **Solution:**
+
 ```bash
 cd backend
 rm -rf node_modules package-lock.json
@@ -67,6 +71,7 @@ npm run start:dev
 **Error:** `listen EADDRINUSE :::3001`
 
 **Solution:**
+
 ```bash
 # Option 1: Find and kill process
 lsof -i :3001
@@ -81,6 +86,7 @@ PORT=3002
 **Error:** Swagger UI returns 404
 
 **Solution:**
+
 ```bash
 # Ensure backend is running
 curl http://localhost:3001/api
@@ -94,6 +100,7 @@ curl http://localhost:3001/api
 **Error:** `Unauthorized: Invalid token`
 
 **Solution:**
+
 ```bash
 # Check JWT_SECRET in .env
 # Ensure token is sent in Authorization header
@@ -112,6 +119,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 **Error:** `Cannot find module 'next'`
 
 **Solution:**
+
 ```bash
 cd frontend
 rm -rf node_modules package-lock.json
@@ -124,10 +132,11 @@ npm run dev
 **Error:** `Failed to fetch from http://localhost:3001`
 
 **Solutions:**
+
 1. Check backend is running: `http://localhost:3001/api`
 2. Check `.env.local` has correct URL:
    ```env
-   NEXT_PUBLIC_API_URL=http://localhost:3001
+   VITE_API_URL=http://localhost:3000
    ```
 3. Clear browser cache and reload
 
@@ -136,6 +145,7 @@ npm run dev
 **Error:** `Error: listen EADDRINUSE :::3000`
 
 **Solution:**
+
 ```bash
 # Find and kill process
 lsof -i :3000
@@ -148,6 +158,7 @@ npm run dev -- -p 3001
 ### Blank Page / 404 Errors
 
 **Solutions:**
+
 1. Check browser console for errors
 2. Verify API is responding: `curl http://localhost:3001/articles`
 3. Clear `.next` cache: `rm -rf .next`
@@ -162,6 +173,7 @@ npm run dev -- -p 3001
 **Error:** `Invalid credentials`
 
 **Solutions:**
+
 1. Verify user exists in database
 2. Check password is correct
 3. Ensure JWT_SECRET matches between .env files
@@ -172,6 +184,7 @@ npm run dev -- -p 3001
 **Error:** `Token expired` after short time
 
 **Solution:**
+
 ```bash
 # Update JWT_EXPIRES_IN in backend/.env
 JWT_EXPIRES_IN=7d  # Increase from default
@@ -186,6 +199,7 @@ JWT_EXPIRES_IN=7d  # Increase from default
 **Error:** `Upload failed: 413 Payload Too Large`
 
 **Solutions:**
+
 1. Check file size (max 5MB recommended)
 2. Verify Cloudinary credentials in .env
 3. Check CLOUDINARY_CLOUD_NAME, API_KEY, API_SECRET
@@ -195,6 +209,7 @@ JWT_EXPIRES_IN=7d  # Increase from default
 **Error:** `Cloudinary is not initialized`
 
 **Solution:**
+
 ```bash
 # Ensure .env has Cloudinary config
 CLOUDINARY_CLOUD_NAME=your_cloud_name
@@ -212,6 +227,7 @@ npm run start:dev
 ### Slow API Responses
 
 **Solutions:**
+
 1. Check database indexes
 2. Monitor backend logs
 3. Check network tab in DevTools
@@ -220,6 +236,7 @@ npm run start:dev
 ### High Memory Usage
 
 **Solutions:**
+
 1. Check for memory leaks
 2. Restart backend/frontend
 3. Monitor with: `node --inspect`
@@ -233,6 +250,7 @@ npm run start:dev
 **Error:** `Build failed with exit code 1`
 
 **Solutions:**
+
 ```bash
 # Backend build
 cd backend
@@ -253,11 +271,13 @@ npm run type-check
 ### Enable Debug Logging
 
 **Backend:**
+
 ```bash
 DEBUG=* npm run start:dev
 ```
 
 **Frontend:**
+
 ```bash
 npm run dev -- --debug
 ```
@@ -265,12 +285,14 @@ npm run dev -- --debug
 ### Check Logs
 
 **Backend logs:**
+
 ```bash
 # In terminal where backend is running
 # Look for error messages
 ```
 
 **Browser console:**
+
 - Press F12
 - Check Console tab for errors
 - Check Network tab for failed requests
