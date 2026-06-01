@@ -60,10 +60,15 @@ export class ArticlesService {
 
     const queryBuilder = this.articleRepository
       .createQueryBuilder('article')
-      .leftJoinAndSelect('article.author', 'author')
+      .leftJoin('article.author', 'author')
+      .addSelect(['author.id', 'author.username', 'author.avatar', 'author.bio'])
       .leftJoinAndSelect('article.tags', 'tags')
-      .leftJoinAndSelect('article.claps', 'claps')
+      .leftJoin('article.claps', 'claps')
+      .addSelect('COALESCE(SUM(claps.count), 0)', 'clapsCount')
       .where('article.published = :published', { published: true })
+      .groupBy('article.id')
+      .addGroupBy('author.id')
+      .addGroupBy('tags.id')
       .orderBy('article.createdAt', 'DESC')
       .skip(skip)
       .take(limit);
@@ -72,13 +77,29 @@ export class ArticlesService {
       queryBuilder.andWhere('tags.name = :tag', { tag: tag.toLowerCase() });
     }
 
-    const [articles, total] = await queryBuilder.getManyAndCount();
+    const articles = await queryBuilder.getRawAndEntities();
+
+    // Get total count separately (without groupBy)
+    const countQuery = this.articleRepository
+      .createQueryBuilder('article')
+      .where('article.published = :published', { published: true });
+
+    if (tag) {
+      countQuery
+        .leftJoin('article.tags', 'tags')
+        .andWhere('tags.name = :tag', { tag: tag.toLowerCase() });
+    }
+
+    const total = await countQuery.getCount();
+
+    // Map clapsCount from raw results to entities
+    const data = articles.entities.map((article, index) => ({
+      ...article,
+      clapsCount: parseInt(articles.raw[index]?.clapsCount) || 0,
+    }));
 
     return {
-      data: articles.map((article) => ({
-        ...article,
-        clapsCount: article.claps?.length || 0,
-      })),
+      data,
       meta: {
         total,
         page,
@@ -89,23 +110,30 @@ export class ArticlesService {
   }
 
   async findOne(id: string) {
-    const article = await this.articleRepository.findOne({
-      where: { id },
-      relations: ['author', 'tags', 'claps', 'comments', 'comments.author'],
-    });
+    const article = await this.articleRepository
+      .createQueryBuilder('article')
+      .leftJoin('article.author', 'author')
+      .addSelect(['author.id', 'author.username', 'author.avatar', 'author.bio'])
+      .leftJoinAndSelect('article.tags', 'tags')
+      .leftJoin('article.claps', 'claps')
+      .addSelect('COALESCE(SUM(claps.count), 0)', 'clapsCount')
+      .loadRelationCountAndMap('article.commentsCount', 'article.comments')
+      .where('article.id = :id', { id })
+      .groupBy('article.id')
+      .addGroupBy('author.id')
+      .addGroupBy('tags.id')
+      .getRawAndEntities();
 
-    if (!article) {
+    if (!article.entities[0]) {
       throw new NotFoundException('Article not found');
     }
 
-    // Increment view count
-    article.viewCount += 1;
-    await this.articleRepository.save(article);
+    // Increment view count atomically
+    await this.articleRepository.increment({ id }, 'viewCount', 1);
 
     return {
-      ...article,
-      clapsCount: article.claps?.length || 0,
-      commentsCount: article.comments?.length || 0,
+      ...article.entities[0],
+      clapsCount: parseInt(article.raw[0]?.clapsCount) || 0,
     };
   }
 
@@ -181,19 +209,34 @@ export class ArticlesService {
   async getUserArticles(userId: string, page = 1, limit = 10) {
     const skip = (page - 1) * limit;
 
-    const [articles, total] = await this.articleRepository.findAndCount({
+    const queryBuilder = this.articleRepository
+      .createQueryBuilder('article')
+      .leftJoin('article.author', 'author')
+      .addSelect(['author.id', 'author.username', 'author.avatar', 'author.bio'])
+      .leftJoinAndSelect('article.tags', 'tags')
+      .leftJoin('article.claps', 'claps')
+      .addSelect('COALESCE(SUM(claps.count), 0)', 'clapsCount')
+      .where('article.authorId = :userId', { userId })
+      .groupBy('article.id')
+      .addGroupBy('author.id')
+      .addGroupBy('tags.id')
+      .orderBy('article.createdAt', 'DESC')
+      .skip(skip)
+      .take(limit);
+
+    const articles = await queryBuilder.getRawAndEntities();
+
+    const total = await this.articleRepository.count({
       where: { authorId: userId },
-      relations: ['author', 'tags', 'claps'],
-      order: { createdAt: 'DESC' },
-      skip,
-      take: limit,
     });
 
+    const data = articles.entities.map((article, index) => ({
+      ...article,
+      clapsCount: parseInt(articles.raw[index]?.clapsCount) || 0,
+    }));
+
     return {
-      data: articles.map((article) => ({
-        ...article,
-        clapsCount: article.claps?.length || 0,
-      })),
+      data,
       meta: {
         total,
         page,
@@ -206,23 +249,44 @@ export class ArticlesService {
   async search(query: string, page = 1, limit = 10) {
     const skip = (page - 1) * limit;
 
-    const [articles, total] = await this.articleRepository.findAndCount({
-      where: [
-        { title: ILike(`%${query}%`), published: true },
-        { subtitle: ILike(`%${query}%`), published: true },
-        { content: ILike(`%${query}%`), published: true },
-      ],
-      relations: ['author', 'tags', 'claps'],
-      order: { createdAt: 'DESC' },
-      skip,
-      take: limit,
-    });
+    const queryBuilder = this.articleRepository
+      .createQueryBuilder('article')
+      .leftJoin('article.author', 'author')
+      .addSelect(['author.id', 'author.username', 'author.avatar', 'author.bio'])
+      .leftJoinAndSelect('article.tags', 'tags')
+      .leftJoin('article.claps', 'claps')
+      .addSelect('COALESCE(SUM(claps.count), 0)', 'clapsCount')
+      .where('article.published = :published', { published: true })
+      .andWhere(
+        '(article.title ILIKE :query OR article.subtitle ILIKE :query OR article.content ILIKE :query)',
+        { query: `%${query}%` },
+      )
+      .groupBy('article.id')
+      .addGroupBy('author.id')
+      .addGroupBy('tags.id')
+      .orderBy('article.createdAt', 'DESC')
+      .skip(skip)
+      .take(limit);
+
+    const articles = await queryBuilder.getRawAndEntities();
+
+    const countQuery = this.articleRepository
+      .createQueryBuilder('article')
+      .where('article.published = :published', { published: true })
+      .andWhere(
+        '(article.title ILIKE :query OR article.subtitle ILIKE :query OR article.content ILIKE :query)',
+        { query: `%${query}%` },
+      );
+
+    const total = await countQuery.getCount();
+
+    const data = articles.entities.map((article, index) => ({
+      ...article,
+      clapsCount: parseInt(articles.raw[index]?.clapsCount) || 0,
+    }));
 
     return {
-      data: articles.map((article) => ({
-        ...article,
-        clapsCount: article.claps?.length || 0,
-      })),
+      data,
       meta: {
         total,
         page,
@@ -235,27 +299,41 @@ export class ArticlesService {
   async getFeed(userId: string, page = 1, limit = 10) {
     const skip = (page - 1) * limit;
 
-    // Get articles from followed users
-    const articles = await this.articleRepository
+    const queryBuilder = this.articleRepository
       .createQueryBuilder('article')
-      .leftJoinAndSelect('article.author', 'author')
+      .leftJoin('article.author', 'author')
+      .addSelect(['author.id', 'author.username', 'author.avatar', 'author.bio'])
       .leftJoinAndSelect('article.tags', 'tags')
-      .leftJoinAndSelect('article.claps', 'claps')
+      .leftJoin('article.claps', 'claps')
+      .addSelect('COALESCE(SUM(claps.count), 0)', 'clapsCount')
       .leftJoin('author.followers', 'follow')
       .where('follow.followerId = :userId', { userId })
       .andWhere('article.published = :published', { published: true })
+      .groupBy('article.id')
+      .addGroupBy('author.id')
+      .addGroupBy('tags.id')
       .orderBy('article.createdAt', 'DESC')
       .skip(skip)
-      .take(limit)
-      .getManyAndCount();
+      .take(limit);
 
-    const [data, total] = articles;
+    const articles = await queryBuilder.getRawAndEntities();
+
+    const countQuery = this.articleRepository
+      .createQueryBuilder('article')
+      .leftJoin('article.author', 'author')
+      .leftJoin('author.followers', 'follow')
+      .where('follow.followerId = :userId', { userId })
+      .andWhere('article.published = :published', { published: true });
+
+    const total = await countQuery.getCount();
+
+    const data = articles.entities.map((article, index) => ({
+      ...article,
+      clapsCount: parseInt(articles.raw[index]?.clapsCount) || 0,
+    }));
 
     return {
-      data: data.map((article) => ({
-        ...article,
-        clapsCount: article.claps?.length || 0,
-      })),
+      data,
       meta: {
         total,
         page,

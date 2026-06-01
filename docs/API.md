@@ -1,16 +1,24 @@
-# Inkory - API Documentation
+# API Documentation
 
-## 🔗 Base URL
+Complete API reference with request/response examples.
+
+**For architecture overview:** See [ARCHITECTURE.md](ARCHITECTURE.md)
+
+## Base URL
 
 ```
-http://localhost:3001
+Development: http://localhost:3000
+Production: https://your-domain.com
 ```
+
+**Note:** Port changed from 3001 to 3000 (2026-06-01)
 
 ## 📚 API Endpoints
 
 ### Authentication
 
 #### Register
+
 ```http
 POST /auth/register
 Content-Type: application/json
@@ -34,6 +42,7 @@ Response: 200 OK
 ```
 
 #### Login
+
 ```http
 POST /auth/login
 Content-Type: application/json
@@ -53,6 +62,7 @@ Response: 200 OK
 ### Users
 
 #### Get Current User Profile
+
 ```http
 GET /users/profile
 Authorization: Bearer <token>
@@ -71,6 +81,7 @@ Response: 200 OK
 ```
 
 #### Update Profile
+
 ```http
 PUT /users/profile
 Authorization: Bearer <token>
@@ -87,6 +98,7 @@ Response: 200 OK
 ```
 
 #### Get User by Username
+
 ```http
 GET /users/:username
 
@@ -97,6 +109,7 @@ Response: 200 OK
 ### Articles
 
 #### Get All Articles
+
 ```http
 GET /articles?page=1&limit=10&tag=javascript
 
@@ -128,6 +141,7 @@ Response: 200 OK
 ```
 
 #### Create Article
+
 ```http
 POST /articles
 Authorization: Bearer <token>
@@ -147,6 +161,7 @@ Response: 201 Created
 ```
 
 #### Get Article by ID
+
 ```http
 GET /articles/:id
 
@@ -155,6 +170,7 @@ Response: 200 OK
 ```
 
 #### Update Article
+
 ```http
 PUT /articles/:id
 Authorization: Bearer <token>
@@ -171,6 +187,7 @@ Response: 200 OK
 ```
 
 #### Delete Article
+
 ```http
 DELETE /articles/:id
 Authorization: Bearer <token>
@@ -180,6 +197,7 @@ Response: 200 OK
 ```
 
 #### Search Articles
+
 ```http
 GET /articles/search?q=javascript&page=1&limit=10
 
@@ -188,6 +206,7 @@ Response: 200 OK
 ```
 
 #### Get User Feed
+
 ```http
 GET /articles/feed?page=1&limit=10
 Authorization: Bearer <token>
@@ -197,6 +216,7 @@ Response: 200 OK
 ```
 
 #### Get User Articles
+
 ```http
 GET /articles/user/:userId?page=1&limit=10
 
@@ -207,6 +227,7 @@ Response: 200 OK
 ### Comments
 
 #### Get Article Comments
+
 ```http
 GET /articles/:articleId/comments
 
@@ -222,6 +243,7 @@ Response: 200 OK
 ```
 
 #### Create Comment
+
 ```http
 POST /articles/:articleId/comments
 Authorization: Bearer <token>
@@ -236,6 +258,7 @@ Response: 201 Created
 ```
 
 #### Delete Comment
+
 ```http
 DELETE /articles/:articleId/comments/:id
 Authorization: Bearer <token>
@@ -247,6 +270,7 @@ Response: 200 OK
 ### Claps
 
 #### Clap Article
+
 ```http
 POST /articles/:articleId/claps
 Authorization: Bearer <token>
@@ -266,6 +290,7 @@ Response: 201 Created
 ```
 
 #### Get Article Claps
+
 ```http
 GET /articles/:articleId/claps
 
@@ -277,6 +302,7 @@ Response: 200 OK
 ```
 
 #### Get User Claps for Article
+
 ```http
 GET /articles/:articleId/claps/user
 Authorization: Bearer <token>
@@ -290,6 +316,7 @@ Response: 200 OK
 ### Bookmarks
 
 #### Toggle Bookmark
+
 ```http
 POST /bookmarks/articles/:articleId
 Authorization: Bearer <token>
@@ -302,6 +329,7 @@ Response: 200 OK
 ```
 
 #### Get User Bookmarks
+
 ```http
 GET /bookmarks?page=1&limit=10
 Authorization: Bearer <token>
@@ -311,6 +339,7 @@ Response: 200 OK
 ```
 
 #### Check Bookmark Status
+
 ```http
 GET /bookmarks/articles/:articleId/check
 Authorization: Bearer <token>
@@ -324,6 +353,7 @@ Response: 200 OK
 ### Follows
 
 #### Toggle Follow
+
 ```http
 POST /follows/users/:userId
 Authorization: Bearer <token>
@@ -336,6 +366,7 @@ Response: 200 OK
 ```
 
 #### Get User Followers
+
 ```http
 GET /follows/users/:userId/followers
 
@@ -350,6 +381,7 @@ Response: 200 OK
 ```
 
 #### Get User Following
+
 ```http
 GET /follows/users/:userId/following
 
@@ -364,6 +396,7 @@ Response: 200 OK
 ```
 
 #### Check Following Status
+
 ```http
 GET /follows/users/:userId/check
 Authorization: Bearer <token>
@@ -377,6 +410,7 @@ Response: 200 OK
 ### Tags
 
 #### Get All Tags
+
 ```http
 GET /tags
 
@@ -391,6 +425,7 @@ Response: 200 OK
 ```
 
 #### Get Popular Tags
+
 ```http
 GET /tags/popular?limit=10
 
@@ -399,6 +434,7 @@ Response: 200 OK
 ```
 
 #### Get Tag Details
+
 ```http
 GET /tags/:name
 
@@ -413,6 +449,7 @@ Response: 200 OK
 ### Upload
 
 #### Upload Image
+
 ```http
 POST /upload/image
 Authorization: Bearer <token>
@@ -438,6 +475,7 @@ Authorization: Bearer <jwt_token>
 ## ❌ Error Responses
 
 ### 400 Bad Request
+
 ```json
 {
   "statusCode": 400,
@@ -447,6 +485,7 @@ Authorization: Bearer <jwt_token>
 ```
 
 ### 401 Unauthorized
+
 ```json
 {
   "statusCode": 401,
@@ -456,6 +495,7 @@ Authorization: Bearer <jwt_token>
 ```
 
 ### 403 Forbidden
+
 ```json
 {
   "statusCode": 403,
@@ -465,6 +505,7 @@ Authorization: Bearer <jwt_token>
 ```
 
 ### 404 Not Found
+
 ```json
 {
   "statusCode": 404,
@@ -474,6 +515,7 @@ Authorization: Bearer <jwt_token>
 ```
 
 ### 409 Conflict
+
 ```json
 {
   "statusCode": 409,
@@ -491,6 +533,7 @@ GET /articles?page=1&limit=10
 ```
 
 Response includes metadata:
+
 ```json
 {
   "data": [ ... ],
@@ -503,11 +546,13 @@ Response includes metadata:
 }
 ```
 
-## 🧪 Testing with Swagger
+## Testing with Swagger
 
-Visit: `http://localhost:3001/api`
+Visit: `http://localhost:3000/api` (development only)
 
 All endpoints are documented and can be tested directly from Swagger UI.
+
+**Note:** Swagger is auto-disabled in production for security.
 
 ## 💡 Tips
 

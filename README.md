@@ -1,17 +1,32 @@
-# Inkory - Modern Blogging Platform
+# Inkory
 
-A modern, full-featured blogging platform for writers and readers built with modern web technologies, allowing users to write, share, and engage with blog posts written in Markdown.
+Full-stack blogging platform - NestJS + Vite + React + PostgreSQL
 
-## 📚 Documentation
+## Quick Start
 
-> **📖 Please read the [documentation](./docs/) first** - Everything you need is there!
+```bash
+# Backend (Port 3000)
+cd backend && npm install
+cp .env.example .env
+# Edit .env: Set JWT_SECRET and DATABASE_URL
+npm run start:dev
 
-👉 **[Start Here](./docs/START_HERE.md)** - All guides and setup instructions
+# Frontend (Port 5173)
+cd frontend && npm install
+cp .env.local.example .env.local
+npm run dev
+```
 
-## 👨‍💻 Contributing
+## Documentation
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+See [docs/index.md](docs/index.md)
 
-## 📝 License
+## Tech Stack
 
-MIT License
+- Frontend: Vite + React 19 + React Router + TailwindCSS
+- Backend: NestJS 10 + TypeORM + PostgreSQL
+- Auth: JWT + Passport
+
+## License
+
+MIT

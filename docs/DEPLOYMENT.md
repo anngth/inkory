@@ -7,6 +7,7 @@ Guide to deploy Inkory to production.
 ### Option 1: Railway (Recommended)
 
 #### 1. Prepare Repository
+
 ```bash
 cd backend
 
@@ -16,17 +17,21 @@ cd backend
 ```
 
 #### 2. Create Railway Account
+
 - Visit: https://railway.app
 - Sign up with GitHub
 
 #### 3. Deploy
+
 - Click "New Project"
 - Select "Deploy from GitHub"
 - Choose your repository
 - Railway auto-detects NestJS
 
 #### 4. Set Environment Variables
+
 In Railway dashboard, add:
+
 ```
 DATABASE_HOST=<railway-postgres-host>
 DATABASE_PORT=5432
@@ -46,45 +51,54 @@ PORT=3001
 ```
 
 #### 5. Add PostgreSQL
+
 - In Railway: Add PostgreSQL plugin
-- It will auto-populate DATABASE_* variables
+- It will auto-populate DATABASE\_\* variables
 
 #### 6. Deploy
+
 - Railway auto-deploys on git push
 - Check logs in dashboard
 
 ### Option 2: Render
 
 #### 1. Create Render Account
+
 - Visit: https://render.com
 - Sign up
 
 #### 2. Create Web Service
+
 - New → Web Service
 - Connect GitHub repository
 - Select backend folder
 
 #### 3. Configure
+
 - Runtime: Node
 - Build Command: `npm install && npm run build`
 - Start Command: `node dist/main`
 
 #### 4. Add PostgreSQL
+
 - New → PostgreSQL
 - Copy connection string to Web Service env
 
 #### 5. Set Environment Variables
+
 Same as Railway setup
 
 ### Option 3: AWS EC2
 
 #### 1. Launch EC2 Instance
+
 ```bash
 # Ubuntu 22.04 LTS
 # t3.micro (free tier eligible)
 ```
 
 #### 2. Install Dependencies
+
 ```bash
 sudo apt update
 sudo apt install nodejs npm postgresql postgresql-contrib
@@ -94,6 +108,7 @@ sudo systemctl start postgresql
 ```
 
 #### 3. Setup Database
+
 ```bash
 sudo -u postgres psql
 
@@ -104,6 +119,7 @@ GRANT ALL PRIVILEGES ON DATABASE inkory_db TO app_user;
 ```
 
 #### 4. Deploy Application
+
 ```bash
 # Clone repository
 git clone <your-repo>
@@ -126,6 +142,7 @@ pm2 save
 ```
 
 #### 5. Setup Nginx Reverse Proxy
+
 ```bash
 sudo apt install nginx
 
@@ -153,6 +170,7 @@ sudo systemctl restart nginx
 ```
 
 #### 6. SSL Certificate (Let's Encrypt)
+
 ```bash
 sudo apt install certbot python3-certbot-nginx
 sudo certbot --nginx -d your-domain.com
@@ -160,74 +178,88 @@ sudo certbot --nginx -d your-domain.com
 
 ---
 
-## 🎨 Frontend Deployment (Next.js)
+## 🎨 Frontend Deployment (Vite)
 
-### Option 1: Vercel (Recommended)
+### Option 1: Vercel
 
 #### 1. Create Vercel Account
+
 - Visit: https://vercel.com
 - Sign up with GitHub
 
 #### 2. Import Project
+
 - Click "New Project"
 - Select your GitHub repository
 - Select frontend folder
 
 #### 3. Configure
-- Framework: Next.js
+
+- Framework Preset: Vite
 - Root Directory: frontend
 - Build Command: `npm run build`
+- Output Directory: `dist`
 - Output Directory: `.next`
 
 #### 4. Set Environment Variables
+
 ```
-NEXT_PUBLIC_API_URL=https://your-backend-domain.com
+VITE_API_URL=https://your-backend-domain.com
 ```
 
 #### 5. Deploy
+
 - Vercel auto-deploys on git push
 - Get production URL
 
 ### Option 2: Netlify
 
 #### 1. Create Netlify Account
+
 - Visit: https://netlify.com
 - Sign up with GitHub
 
 #### 2. New Site from Git
+
 - Connect GitHub
 - Select repository
 - Select frontend folder
 
 #### 3. Configure
+
 - Build Command: `npm run build`
-- Publish Directory: `.next`
+- Publish Directory: `dist`
 
 #### 4. Environment Variables
-- Add `NEXT_PUBLIC_API_URL`
+
+- Add `VITE_API_URL`
 
 #### 5. Deploy
+
 - Netlify auto-deploys
 
 ### Option 3: AWS S3 + CloudFront
 
-#### 1. Build Next.js
+#### 1. Build Vite App
+
 ```bash
 npm run build
-npm run export  # If using static export
 ```
 
 #### 2. Create S3 Bucket
+
 ```bash
 aws s3 mb s3://inkory-frontend
 ```
 
 #### 3. Upload Build
+
 ```bash
-aws s3 sync out/ s3://inkory-frontend/
+aws s3 sync dist/ s3://inkory-frontend/
 ```
 
 #### 4. Setup CloudFront
+
 - Create distribution
 - Point to S3 bucket
 - Add SSL certificate
@@ -239,16 +271,19 @@ aws s3 sync out/ s3://inkory-frontend/
 After deploying backend, update frontend:
 
 ### 1. Get Backend URL
+
 - Railway: `https://your-app.up.railway.app`
 - Render: `https://your-app.onrender.com`
 - AWS: `https://your-domain.com`
 
 ### 2. Update Environment Variable
+
 ```env
-NEXT_PUBLIC_API_URL=https://your-backend-url.com
+VITE_API_URL=https://your-backend-url.com
 ```
 
 ### 3. Redeploy Frontend
+
 - Vercel: Auto-redeploys on git push
 - Netlify: Auto-redeploys on git push
 
@@ -257,6 +292,7 @@ NEXT_PUBLIC_API_URL=https://your-backend-url.com
 ## 🔐 Production Checklist
 
 ### Backend
+
 - [ ] JWT_SECRET is strong and unique
 - [ ] Database credentials are secure
 - [ ] Cloudinary credentials are set
@@ -267,6 +303,7 @@ NEXT_PUBLIC_API_URL=https://your-backend-url.com
 - [ ] SSL certificate is valid
 
 ### Frontend
+
 - [ ] API URL points to production backend
 - [ ] Build is optimized
 - [ ] Environment variables are set
@@ -275,6 +312,7 @@ NEXT_PUBLIC_API_URL=https://your-backend-url.com
 - [ ] Error tracking is configured
 
 ### Database
+
 - [ ] Backups are scheduled
 - [ ] Monitoring is enabled
 - [ ] Connection pooling is configured
@@ -286,6 +324,7 @@ NEXT_PUBLIC_API_URL=https://your-backend-url.com
 ## 📊 Monitoring & Maintenance
 
 ### Backend Monitoring
+
 ```bash
 # Check logs
 pm2 logs
@@ -298,6 +337,7 @@ pm2 restart all
 ```
 
 ### Database Monitoring
+
 ```bash
 # Check connections
 SELECT count(*) FROM pg_stat_activity;
@@ -307,6 +347,7 @@ SELECT pg_size_pretty(pg_database_size('inkory_db'));
 ```
 
 ### Frontend Monitoring
+
 - Vercel Analytics
 - Netlify Analytics
 - Google Analytics
@@ -316,6 +357,7 @@ SELECT pg_size_pretty(pg_database_size('inkory_db'));
 ## 🚨 Troubleshooting
 
 ### Backend won't start
+
 ```bash
 # Check logs
 pm2 logs
@@ -328,6 +370,7 @@ echo $DATABASE_HOST
 ```
 
 ### Database connection failed
+
 ```bash
 # Test connection
 psql -h $DATABASE_HOST -U $DATABASE_USER -d $DATABASE_NAME
@@ -336,15 +379,17 @@ psql -h $DATABASE_HOST -U $DATABASE_USER -d $DATABASE_NAME
 ```
 
 ### Frontend can't reach backend
+
 ```bash
 # Check API URL
-echo $NEXT_PUBLIC_API_URL
+echo $VITE_API_URL
 
 # Test API
 curl https://your-backend-url.com/api
 ```
 
 ### SSL certificate issues
+
 ```bash
 # Renew certificate
 sudo certbot renew
@@ -358,20 +403,24 @@ sudo certbot certificates
 ## 💰 Cost Estimation
 
 ### Railway
+
 - Database: $7/month
 - Backend: $5/month
 - **Total**: ~$12/month
 
 ### Render
+
 - Database: Free tier available
 - Backend: $7/month
 - **Total**: ~$7/month
 
 ### Vercel
+
 - Frontend: Free tier available
 - **Total**: Free or $20+/month
 
 ### AWS (EC2 + RDS)
+
 - EC2: $10-20/month
 - RDS: $15-30/month
 - **Total**: $25-50/month
@@ -394,21 +443,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
-          node-version: '18'
-      
+          node-version: "18"
+
       - name: Install dependencies
         run: npm install
-      
+
       - name: Build
         run: npm run build
-      
+
       - name: Test
         run: npm test
-      
+
       - name: Deploy
         run: npm run deploy
 ```
@@ -418,16 +467,19 @@ jobs:
 ## 📈 Scaling Strategies
 
 ### Horizontal Scaling
+
 - Multiple backend instances
 - Load balancer (Nginx, HAProxy)
 - Database read replicas
 
 ### Vertical Scaling
+
 - Upgrade server resources
 - Increase database memory
 - Optimize queries
 
 ### Caching
+
 - Redis for session storage
 - CDN for static assets
 - Database query caching
@@ -439,6 +491,7 @@ jobs:
 Your Inkory platform is now live in production.
 
 ### Next Steps
+
 1. Monitor application performance
 2. Setup automated backups
 3. Configure error tracking
@@ -446,9 +499,9 @@ Your Inkory platform is now live in production.
 5. Plan scaling strategy
 
 ### Resources
+
 - Railway Docs: https://docs.railway.app
 - Render Docs: https://render.com/docs
 - Vercel Docs: https://vercel.com/docs
-- Next.js Deployment: https://nextjs.org/docs/deployment
 
 Happy deploying! 🚀

@@ -48,22 +48,25 @@ export class UsersService {
   }
 
   async getUserByUsername(username: string) {
-    const user = await this.userRepository.findOne({
-      where: { username },
-      relations: ['articles', 'followers', 'following'],
-    });
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .select([
+        'user.id',
+        'user.username',
+        'user.bio',
+        'user.avatar',
+        'user.createdAt',
+      ])
+      .loadRelationCountAndMap('user.followersCount', 'user.followers')
+      .loadRelationCountAndMap('user.followingCount', 'user.following')
+      .loadRelationCountAndMap('user.articlesCount', 'user.articles')
+      .where('user.username = :username', { username })
+      .getOne();
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    const { password, ...userWithoutPassword } = user;
-
-    return {
-      ...userWithoutPassword,
-      followersCount: user.followers?.length || 0,
-      followingCount: user.following?.length || 0,
-      articlesCount: user.articles?.length || 0,
-    };
+    return user;
   }
 }
