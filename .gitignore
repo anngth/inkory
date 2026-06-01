@@ -1,43 +1,13 @@
-# Dependencies
-node_modules/
-.pnp
-.pnp.js
-
-# Testing
-coverage/
-.nyc_output
-
-# Production
-build/
-dist/
-.next/
-out/
-
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-.pnpm-debug.log*
-
-# OS
+# OS files
 .DS_Store
 *.swp
 *.swo
 *~
 Thumbs.db
+.Spotlight-V100
+.Trashes
 
-# IDE
-.vscode/
+# IDE & Editors (except .vscode for team settings)
 .idea/
 *.iml
 *.suo
@@ -45,9 +15,16 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+.project
+.classpath
+.settings/
+
+# Logs (root level)
+logs/
+*.log
+
+# Environment (root level)
+.env
 
 # Misc
-.cache/
-.parcel-cache
-.eslintcache
 .turbo
