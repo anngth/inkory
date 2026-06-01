@@ -2,7 +2,7 @@
 
 ## Tech Stack
 
-```
+```text
 Frontend (Vite)
 ├── Framework: Vite + React 19
 ├── Routing: React Router 6
@@ -113,7 +113,7 @@ PRIMARY KEY(articleId, tagId)
 
 #### Articles
 
-```
+```http
 GET  /articles?page=1&limit=10&tag=javascript
      → List published articles (paginated, max 50/page)
 
@@ -129,7 +129,7 @@ GET  /articles/user/:userId?page=1&limit=10
 
 #### Tags
 
-```
+```http
 GET  /tags
      → List all tags with article counts
 
@@ -142,7 +142,7 @@ GET  /tags/:name?page=1&limit=10
 
 #### Users
 
-```
+```http
 GET  /users/:username
      → Public profile (no email/password)
      → Returns: id, username, bio, avatar, counts
@@ -150,7 +150,7 @@ GET  /users/:username
 
 #### Auth
 
-```
+```http
 POST /auth/register
      Body: {email, password, username}
      → Register new user
@@ -164,7 +164,7 @@ POST /auth/login
 
 #### Articles
 
-```
+```http
 POST   /articles
        Body: {title, subtitle, content, coverImage, published, tags[]}
        → Create article
@@ -182,7 +182,7 @@ GET    /articles/feed?page=1&limit=10
 
 #### Claps
 
-```
+```http
 POST   /articles/:id/clap
        → Add clap (increments count if already clapped)
 
@@ -192,7 +192,7 @@ DELETE /articles/:id/clap
 
 #### Bookmarks
 
-```
+```http
 POST   /articles/:id/bookmark
        → Bookmark article
 
@@ -205,7 +205,7 @@ GET    /bookmarks?page=1&limit=10
 
 #### Comments
 
-```
+```http
 POST   /articles/:id/comments
        Body: {content}
        → Add comment
@@ -219,7 +219,7 @@ DELETE /comments/:id
 
 #### Follows
 
-```
+```http
 POST   /follows/:userId
        → Follow user
 
@@ -235,7 +235,7 @@ GET    /follows/following
 
 #### Users
 
-```
+```http
 GET  /users/profile
      → Get own profile (includes email)
 
@@ -246,7 +246,7 @@ PUT  /users/profile
 
 #### Upload
 
-```
+```http
 POST /upload/image
      Form: image file (max 5MB, JPEG/PNG/GIF/WebP)
      → Upload image to Cloudinary
@@ -344,7 +344,7 @@ export class CreateArticleDto {
 
 ### Article Creation
 
-```
+```text
 1. User submits article form (frontend)
 2. POST /articles with JWT token
 3. JwtAuthGuard validates token
@@ -357,7 +357,7 @@ export class CreateArticleDto {
 
 ### Article View
 
-```
+```text
 1. User clicks article (frontend)
 2. GET /articles/:id (no auth required)
 3. Load article with relations (author, tags)
@@ -369,7 +369,7 @@ export class CreateArticleDto {
 
 ### Clap System
 
-```
+```text
 1. User claps article (frontend)
 2. POST /articles/:id/clap with JWT
 3. Find existing clap (userId + articleId)
@@ -444,7 +444,7 @@ try {
 
 ## Deployment Architecture
 
-```
+```text
 Production:
 ├── Frontend: Vercel/Netlify (static)
 ├── Backend: Railway/Render (container)

@@ -32,7 +32,7 @@ cd backend
 
 In Railway dashboard, add:
 
-```
+```env
 DATABASE_HOST=<railway-postgres-host>
 DATABASE_PORT=5432
 DATABASE_USER=<postgres-user>
@@ -202,7 +202,7 @@ sudo certbot --nginx -d your-domain.com
 
 #### 4. Set Environment Variables
 
-```
+```env
 VITE_API_URL=https://your-backend-domain.com
 ```
 

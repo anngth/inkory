@@ -173,7 +173,7 @@
 
 #### Backend Structure:
 
-```
+```text
 backend/
 ├── src/
 │   ├── auth/           # Authentication module
@@ -192,7 +192,7 @@ backend/
 
 #### Frontend Structure:
 
-```
+```text
 frontend/
 ├── src/
 │   ├── components/     # Reusable components

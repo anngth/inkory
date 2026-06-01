@@ -50,26 +50,22 @@ export class TagsService {
       return null;
     }
 
-    // Query articles from articleRepository with proper pagination
-    const queryBuilder = this.articleRepository
+    // Step 1: Get paginated distinct article IDs
+    const articleIdsQuery = this.articleRepository
       .createQueryBuilder('article')
       .leftJoin('article.tags', 'tag')
-      .leftJoin('article.author', 'author')
-      .addSelect(['author.id', 'author.username', 'author.avatar', 'author.bio'])
-      .leftJoinAndSelect('article.tags', 'tags')
-      .leftJoin('article.claps', 'claps')
-      .addSelect('COALESCE(SUM(claps.count), 0)', 'clapsCount')
       .where('tag.id = :tagId', { tagId: tag.id })
       .andWhere('article.published = :published', { published: true })
-      .groupBy('article.id')
-      .addGroupBy('author.id')
-      .addGroupBy('tags.id')
+      .select('article.id')
+      .distinct(true)
       .orderBy('article.createdAt', 'DESC')
       .skip(skip)
       .take(limit);
 
-    const articlesResult = await queryBuilder.getRawAndEntities();
+    const articleIdsResult = await articleIdsQuery.getRawMany();
+    const articleIds = articleIdsResult.map((row) => row.article_id);
 
+    // Get total count using the same base filter
     const total = await this.articleRepository
       .createQueryBuilder('article')
       .leftJoin('article.tags', 'tag')
@@ -77,9 +73,50 @@ export class TagsService {
       .andWhere('article.published = :published', { published: true })
       .getCount();
 
-    const articles = articlesResult.entities.map((article, index) => ({
+    // If no articles found, return early
+    if (articleIds.length === 0) {
+      return {
+        ...tag,
+        articles: [],
+        meta: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+        },
+      };
+    }
+
+    // Step 2: Fetch full article data with aggregated relations
+    const queryBuilder = this.articleRepository
+      .createQueryBuilder('article')
+      .leftJoin('article.author', 'author')
+      .addSelect(['author.id', 'author.username', 'author.avatar', 'author.bio'])
+      .leftJoinAndSelect('article.tags', 'tags')
+      .leftJoin('article.claps', 'claps')
+      .addSelect('COALESCE(SUM(claps.count), 0)', 'clapsCount')
+      .where('article.id IN (:...ids)', { ids: articleIds })
+      .groupBy('article.id')
+      .addGroupBy('author.id')
+      .addGroupBy('tags.id')
+      .orderBy('article.createdAt', 'DESC');
+
+    const articlesResult = await queryBuilder.getRawAndEntities();
+
+    // Build a lookup map from raw results keyed by article ID
+    // Raw results contain one row per article×tag combination due to groupBy
+    const clapsLookup = new Map<string, number>();
+    articlesResult.raw.forEach((row) => {
+      const articleId = row.article_id;
+      if (articleId && !clapsLookup.has(articleId)) {
+        clapsLookup.set(articleId, parseInt(row.clapsCount) || 0);
+      }
+    });
+
+    // Map clapsCount using the lookup instead of raw array index
+    const articles = articlesResult.entities.map((article) => ({
       ...article,
-      clapsCount: parseInt(articlesResult.raw[index]?.clapsCount) || 0,
+      clapsCount: clapsLookup.get(article.id) || 0,
     }));
 
     return {

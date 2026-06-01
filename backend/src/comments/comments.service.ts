@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, ForbiddenException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Comment } from "../entities/comment.entity";
@@ -61,7 +61,7 @@ export class CommentsService {
     }
 
     if (comment.authorId !== userId) {
-      throw new NotFoundException("You can only delete your own comments");
+      throw new ForbiddenException("You can only delete your own comments");
     }
 
     await this.commentRepository.remove(comment);

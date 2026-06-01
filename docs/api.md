@@ -6,7 +6,7 @@ Complete API reference with request/response examples.
 
 ## Base URL
 
-```
+```text
 Development: http://localhost:3000
 Production: https://your-domain.com
 ```
