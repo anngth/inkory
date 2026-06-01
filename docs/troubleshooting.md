@@ -66,22 +66,22 @@ npm install
 npm run start:dev
 ```
 
-### Port 3001 Already in Use
+### Backend Port Already in Use
 
-**Error:** `listen EADDRINUSE :::3001`
+**Error:** `listen EADDRINUSE :::3000`
 
 **Solution:**
 
 ```bash
 # Option 1: Find and kill process
-lsof -i :3001
+lsof -i :3000
 kill -9 <PID>
 
 # Option 2: Change port in .env
-PORT=3002
+PORT=3001
 ```
 
-### Swagger UI Not Loading
+### Swagger UI Not Loading (Development Only)
 
 **Error:** Swagger UI returns 404
 
@@ -89,10 +89,10 @@ PORT=3002
 
 ```bash
 # Ensure backend is running
-curl http://localhost:3001/api
+curl http://localhost:3000/api
 
-# Check main.ts has Swagger setup
-# Should see: SwaggerModule.setup('api', app, document);
+# Check ENABLE_SWAGGER=true in .env
+# Swagger is disabled in production for security
 ```
 
 ### JWT Token Invalid
@@ -116,7 +116,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 ### Frontend Won't Start
 
-**Error:** `Cannot find module 'next'`
+**Error:** `Cannot find module` or dependency issues
 
 **Solution:**
 
@@ -129,30 +129,30 @@ npm run dev
 
 ### API Connection Failed
 
-**Error:** `Failed to fetch from http://localhost:3001`
+**Error:** `Failed to fetch from http://localhost:3000`
 
 **Solutions:**
 
-1. Check backend is running: `http://localhost:3001/api`
+1. Check backend is running: `http://localhost:3000/api`
 2. Check `.env.local` has correct URL:
    ```env
    VITE_API_URL=http://localhost:3000
    ```
 3. Clear browser cache and reload
 
-### Port 3000 Already in Use
+### Frontend Port Already in Use
 
-**Error:** `Error: listen EADDRINUSE :::3000`
+**Error:** `Error: listen EADDRINUSE :::5173`
 
 **Solution:**
 
 ```bash
 # Find and kill process
-lsof -i :3000
+lsof -i :5173
 kill -9 <PID>
 
 # Or use different port
-npm run dev -- -p 3001
+npm run dev -- --port 5174
 ```
 
 ### Blank Page / 404 Errors
@@ -160,8 +160,8 @@ npm run dev -- -p 3001
 **Solutions:**
 
 1. Check browser console for errors
-2. Verify API is responding: `curl http://localhost:3001/articles`
-3. Clear `.next` cache: `rm -rf .next`
+2. Verify API is responding: `curl http://localhost:3000/articles`
+3. Clear Vite cache: `rm -rf node_modules/.vite`
 4. Restart dev server
 
 ---

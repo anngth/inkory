@@ -459,7 +459,7 @@ Development:
 
 ## Next Steps
 
-- **Setup locally:** [SETUP.md](SETUP.md)
-- **Review security:** [SECURITY.md](SECURITY.md)
-- **Deploy:** [DEPLOYMENT.md](DEPLOYMENT.md)
-- **Troubleshoot:** [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+- **Setup locally:** [setup.md](setup.md)
+- **Review security:** [security.md](security.md)
+- **Deploy:** [deployment.md](deployment.md)
+- **Troubleshoot:** [troubleshooting.md](troubleshooting.md)

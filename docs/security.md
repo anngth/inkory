@@ -363,7 +363,7 @@ For major updates, test thoroughly before upgrading.
 
 ## Support
 
-- **Setup:** [SETUP.md](SETUP.md)
-- **Architecture:** [ARCHITECTURE.md](ARCHITECTURE.md)
-- **Deployment:** [DEPLOYMENT.md](DEPLOYMENT.md)
-- **Troubleshooting:** [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+- **Setup:** [setup.md](setup.md)
+- **Architecture:** [architecture.md](architecture.md)
+- **Deployment:** [deployment.md](deployment.md)
+- **Troubleshooting:** [troubleshooting.md](troubleshooting.md)

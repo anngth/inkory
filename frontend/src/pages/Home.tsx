@@ -12,9 +12,12 @@ export default function Home() {
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    loadArticles();
     loadPopularTags();
   }, []);
+
+  useEffect(() => {
+    loadArticles();
+  }, [page]);
 
   const loadArticles = async () => {
     try {
@@ -46,7 +49,6 @@ export default function Home() {
 
   const loadMore = () => {
     setPage((prev) => prev + 1);
-    loadArticles();
   };
 
   if (loading) {

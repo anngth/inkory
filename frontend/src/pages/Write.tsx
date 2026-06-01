@@ -32,9 +32,7 @@ export default function WritePage() {
     formData.append("image", file);
 
     try {
-      const response = await api.post("/upload/image", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await api.post("/upload/image", formData);
       setCoverImage(response.data.url);
     } catch (error) {
       console.error("Failed to upload image:", error);

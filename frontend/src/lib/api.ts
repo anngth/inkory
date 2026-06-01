@@ -23,9 +23,18 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = "/login";
+      const requestUrl = error.config?.url || "";
+      const currentPath = window.location.pathname;
+
+      // Don't redirect if this is a login request or already on login page
+      const isLoginRequest = requestUrl.includes("/auth/login");
+      const isOnLoginPage = currentPath === "/login";
+
+      if (!isLoginRequest && !isOnLoginPage) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/login";
+      }
     }
     return Promise.reject(error);
   },
