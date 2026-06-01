@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { JwtModule } from "@nestjs/jwt";
+import { JwtModule, JwtModuleOptions } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
@@ -14,7 +14,9 @@ import { User } from "../entities/user.entity";
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => {
+      useFactory: async (
+        configService: ConfigService,
+      ): Promise<JwtModuleOptions> => {
         const secret = configService.get<string>("JWT_SECRET");
         const expiresIn = configService.get<string>("JWT_EXPIRES_IN", "7d");
 
@@ -33,7 +35,7 @@ import { User } from "../entities/user.entity";
         return {
           secret,
           signOptions: {
-            expiresIn,
+            expiresIn: expiresIn as any, // StringValue from 'ms' package
           },
         };
       },
