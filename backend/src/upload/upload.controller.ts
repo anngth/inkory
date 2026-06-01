@@ -16,6 +16,13 @@ import {
 import { UploadService } from "./upload.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 
+interface MulterFile {
+  buffer: Buffer;
+  originalname: string;
+  mimetype: string;
+  size: number;
+}
+
 // Magic bytes for image validation
 function validateImageMagicBytes(buffer: Buffer): boolean {
   const header = Array.from(buffer.slice(0, 12));
@@ -93,7 +100,7 @@ export class UploadController {
       },
     }),
   )
-  async uploadImage(@UploadedFile() file: Express.Multer.File) {
+  async uploadImage(@UploadedFile() file: MulterFile) {
     if (!file) {
       throw new BadRequestException("No file uploaded");
     }

@@ -9,7 +9,6 @@ interface ArticleCardProps {
 
 export default function ArticleCard({ article }: ArticleCardProps) {
   const navigate = useNavigate();
-  const excerpt = article.content.substring(0, 150) + "...";
 
   const handleCardClick = () => {
     navigate(`/article/${article.id}`);
