@@ -28,7 +28,7 @@ cp .env.example .env
 
 Edit `.env`:
 
-```bash
+```env
 # Required
 JWT_SECRET=$(openssl rand -base64 32)  # Generate strong secret
 DATABASE_URL=postgresql://user:pass@localhost:5432/inkory_db
@@ -62,7 +62,7 @@ cp .env.local.example .env.local
 
 Edit `.env.local`:
 
-```bash
+```env
 VITE_API_URL=http://localhost:3000
 ```
 
@@ -125,7 +125,7 @@ npm run seed
 
 ## Project Structure
 
-```
+```text
 inkory/
 ├── backend/              # NestJS API (Port 3000)
 │   ├── src/

@@ -53,7 +53,7 @@ Details: [security.md](security.md)
 
 ## 🏗️ Tech Stack
 
-```
+```text
 Frontend: Vite + React 19 + React Router + TailwindCSS + Zustand
 Backend:  NestJS 10 + TypeORM 0.3 + PostgreSQL
 Auth:     JWT + Passport
