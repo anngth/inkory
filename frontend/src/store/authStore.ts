@@ -4,37 +4,28 @@ import api from '@/lib/api';
 
 interface AuthState {
   user: User | null;
-  token: string | null;
   isLoading: boolean;
   setUser: (user: User | null) => void;
-  setToken: (token: string | null) => void;
   login: (email: string, password: string) => Promise<void>;
   register: (
     email: string,
     password: string,
     username: string,
   ) => Promise<void>;
-  logout: () => void;
-  checkAuth: () => void;
+  logout: () => Promise<void>;
+  checkAuth: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>(set => ({
   user: null,
-  token: null,
   isLoading: true,
 
   setUser: user => set({ user }),
 
-  setToken: token => set({ token }),
-
   login: async (email, password) => {
     const response = await api.post('/auth/login', { email, password });
-    const { user, token } = response.data;
-
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-
-    set({ user, token, isLoading: false });
+    const { user } = response.data;
+    set({ user, isLoading: false });
   },
 
   register: async (email, password, username) => {
@@ -43,33 +34,28 @@ export const useAuthStore = create<AuthState>(set => ({
       password,
       username,
     });
-    const { user, token } = response.data;
-
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-
-    set({ user, token, isLoading: false });
+    const { user } = response.data;
+    set({ user, isLoading: false });
   },
 
-  logout: () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    set({ user: null, token: null });
+  logout: async () => {
+    try {
+      await api.post('/auth/logout');
+    } catch (error) {
+      // Ignore errors on logout
+      console.error('Logout error:', error);
+    } finally {
+      set({ user: null });
+    }
   },
 
-  checkAuth: () => {
-    const token = localStorage.getItem('token');
-    const userStr = localStorage.getItem('user');
-
-    if (token && userStr) {
-      try {
-        const user = JSON.parse(userStr);
-        set({ user, token, isLoading: false });
-      } catch {
-        set({ user: null, token: null, isLoading: false });
-      }
-    } else {
-      set({ isLoading: false });
+  checkAuth: async () => {
+    try {
+      const response = await api.get('/auth/me');
+      set({ user: response.data, isLoading: false });
+    } catch (error) {
+      // Not authenticated or session expired
+      set({ user: null, isLoading: false });
     }
   },
 }));

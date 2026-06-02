@@ -7,15 +7,7 @@ export const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-});
-
-// Add token to requests
-api.interceptors.request.use(config => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
+  withCredentials: true, // Enable sending cookies with requests
 });
 
 // Handle response errors
@@ -28,11 +20,18 @@ api.interceptors.response.use(
 
       // Don't redirect if this is a login request or already on login page
       const isLoginRequest = requestUrl.includes('/auth/login');
+      const isRegisterRequest = requestUrl.includes('/auth/register');
+      const isMeRequest = requestUrl.includes('/auth/me');
       const isOnLoginPage = currentPath === '/login';
+      const isOnRegisterPage = currentPath === '/register';
 
-      if (!isLoginRequest && !isOnLoginPage) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+      if (
+        !isLoginRequest &&
+        !isRegisterRequest &&
+        !isMeRequest &&
+        !isOnLoginPage &&
+        !isOnRegisterPage
+      ) {
         window.location.href = '/login';
       }
     }

@@ -69,7 +69,6 @@ export default function SettingsPage() {
       });
 
       setUser(response.data);
-      localStorage.setItem('user', JSON.stringify(response.data));
       setMessage('Profile updated successfully!');
 
       if (timeoutId) {

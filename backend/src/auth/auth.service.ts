@@ -85,6 +85,27 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
+  async getUserById(userId: string) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        bio: true,
+        avatar: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    return this.sanitizeUser(user);
+  }
+
   private sanitizeUser(user: User) {
     const { password, ...result } = user;
     return result;
