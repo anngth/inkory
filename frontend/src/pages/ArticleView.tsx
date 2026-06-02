@@ -157,12 +157,14 @@ export default function ArticlePage() {
                 <Link
                   to={`/article/${article.id}/edit`}
                   className="p-2 hover:bg-gray-100 rounded-full"
+                  aria-label="Edit article"
                 >
                   <Edit size={20} />
                 </Link>
                 <button
                   onClick={handleDelete}
                   className="p-2 hover:bg-red-50 text-red-600 rounded-full"
+                  aria-label="Delete article"
                 >
                   <Trash2 size={20} />
                 </button>
@@ -195,6 +197,8 @@ export default function ArticlePage() {
                 ? 'bg-yellow-50 border-yellow-500'
                 : 'hover:bg-gray-100'
             }`}
+            aria-label="Toggle bookmark"
+            aria-pressed={bookmarked}
           >
             <Bookmark
               size={20}

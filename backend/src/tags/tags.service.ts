@@ -16,11 +16,21 @@ export class TagsService {
   async findAll() {
     const tags = await this.tagRepository
       .createQueryBuilder('tag')
-      .loadRelationIdAndMap('tag.articlesCount', 'tag.articles')
+      .addSelect(
+        subQuery =>
+          subQuery
+            .select('COUNT(article_tag.articleId)', 'count')
+            .from('article_tags_tag', 'article_tag')
+            .where('article_tag.tagId = tag.id'),
+        'articlesCount',
+      )
       .orderBy('tag.name', 'ASC')
-      .getMany();
+      .getRawAndEntities();
 
-    return tags;
+    return tags.entities.map((tag, index) => ({
+      ...tag,
+      articlesCount: parseInt(tags.raw[index]?.articlesCount) || 0,
+    }));
   }
 
   async findPopular(limit = 10) {

@@ -27,6 +27,20 @@ export default function WritePage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Validate file type
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      alert('Invalid file type. Please upload PNG, JPEG, or GIF images only.');
+      return;
+    }
+
+    // Validate file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      alert('File size exceeds 5MB limit. Please choose a smaller image.');
+      return;
+    }
+
     setUploading(true);
     const formData = new FormData();
     formData.append('image', file);
@@ -125,7 +139,7 @@ export default function WritePage() {
                 <input
                   type="file"
                   className="hidden"
-                  accept="image/*"
+                  accept="image/png, image/jpeg, image/gif"
                   onChange={handleImageUpload}
                   disabled={uploading}
                 />

@@ -61,16 +61,42 @@ export class UsersService {
         'user.avatar',
         'user.createdAt',
       ])
-      .loadRelationIdAndMap('user.followersCount', 'user.followers')
-      .loadRelationIdAndMap('user.followingCount', 'user.following')
-      .loadRelationIdAndMap('user.articlesCount', 'user.articles')
+      .addSelect(
+        subQuery =>
+          subQuery
+            .select('COUNT(follower.id)', 'count')
+            .from('follow', 'follower')
+            .where('follower.followingId = user.id'),
+        'followersCount',
+      )
+      .addSelect(
+        subQuery =>
+          subQuery
+            .select('COUNT(following.id)', 'count')
+            .from('follow', 'following')
+            .where('following.followerId = user.id'),
+        'followingCount',
+      )
+      .addSelect(
+        subQuery =>
+          subQuery
+            .select('COUNT(article.id)', 'count')
+            .from('article', 'article')
+            .where('article.authorId = user.id'),
+        'articlesCount',
+      )
       .where('user.username = :username', { username })
-      .getOne();
+      .getRawAndEntities();
 
-    if (!user) {
+    if (!user.entities[0]) {
       throw new NotFoundException('User not found');
     }
 
-    return user;
+    return {
+      ...user.entities[0],
+      followersCount: parseInt(user.raw[0]?.followersCount) || 0,
+      followingCount: parseInt(user.raw[0]?.followingCount) || 0,
+      articlesCount: parseInt(user.raw[0]?.articlesCount) || 0,
+    };
   }
 }

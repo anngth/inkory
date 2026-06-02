@@ -13,6 +13,14 @@ export default function TagPage() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
+  // Reset pagination when tag changes
+  useEffect(() => {
+    setPage(1);
+    setArticles([]);
+    setHasMore(true);
+    setLoading(true);
+  }, [tagName]);
+
   useEffect(() => {
     loadArticles();
   }, [tagName, page]);

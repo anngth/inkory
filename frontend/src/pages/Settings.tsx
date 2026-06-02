@@ -13,6 +13,7 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState('');
+  const [timeoutId, setTimeoutId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -27,6 +28,14 @@ export default function SettingsPage() {
       setAvatar(user.avatar || '');
     }
   }, [user]);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [timeoutId]);
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -63,9 +72,14 @@ export default function SettingsPage() {
       localStorage.setItem('user', JSON.stringify(response.data));
       setMessage('Profile updated successfully!');
 
-      setTimeout(() => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+
+      const newTimeoutId = setTimeout(() => {
         navigate(`/profile/${response.data.username}`);
       }, 1500);
+      setTimeoutId(newTimeoutId);
     } catch (error: any) {
       console.error('Failed to update profile:', error);
       setMessage(error.response?.data?.message || 'Failed to update profile');

@@ -127,7 +127,14 @@ export class ArticlesService {
       .leftJoinAndSelect('article.tags', 'tags')
       .leftJoin('article.claps', 'claps')
       .addSelect('COALESCE(SUM(claps.count), 0)', 'clapsCount')
-      .loadRelationIdAndMap('article.commentsCount', 'article.comments')
+      .addSelect(
+        subQuery =>
+          subQuery
+            .select('COUNT(comment.id)', 'count')
+            .from('comment', 'comment')
+            .where('comment.articleId = article.id'),
+        'commentsCount',
+      )
       .where('article.id = :id', { id })
       .groupBy('article.id')
       .addGroupBy('author.id')
@@ -144,6 +151,7 @@ export class ArticlesService {
     return {
       ...article.entities[0],
       clapsCount: parseInt(article.raw[0]?.clapsCount) || 0,
+      commentsCount: parseInt(article.raw[0]?.commentsCount) || 0,
     };
   }
 
