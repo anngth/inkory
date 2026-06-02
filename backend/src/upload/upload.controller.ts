@@ -15,11 +15,9 @@ import {
 } from "@nestjs/swagger";
 import { UploadService } from "./upload.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { MulterFile } from "./upload.types";
 
-interface MulterFile {
-  buffer: Buffer;
-  originalname: string;
-  mimetype: string;
+interface ControllerMulterFile extends MulterFile {
   size: number;
 }
 
@@ -100,7 +98,7 @@ export class UploadController {
       },
     }),
   )
-  async uploadImage(@UploadedFile() file: MulterFile) {
+  async uploadImage(@UploadedFile() file: ControllerMulterFile) {
     if (!file) {
       throw new BadRequestException("No file uploaded");
     }

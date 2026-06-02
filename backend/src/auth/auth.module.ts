@@ -18,7 +18,7 @@ import { User } from "../entities/user.entity";
         configService: ConfigService,
       ): Promise<JwtModuleOptions> => {
         const secret = configService.get<string>("JWT_SECRET");
-        const expiresIn = configService.get<string>("JWT_EXPIRES_IN", "7d");
+        const expiresIn = configService.get("JWT_EXPIRES_IN", "7d");
 
         if (!secret) {
           throw new Error(
@@ -35,7 +35,7 @@ import { User } from "../entities/user.entity";
         return {
           secret,
           signOptions: {
-            expiresIn: expiresIn as any, // StringValue from 'ms' package
+            expiresIn: expiresIn,
           },
         };
       },
