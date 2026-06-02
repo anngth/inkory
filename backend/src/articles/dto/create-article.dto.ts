@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsString, IsOptional, IsBoolean, IsArray } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsOptional,
+  IsBoolean,
+  IsArray,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateArticleDto {
@@ -27,7 +33,11 @@ export class CreateArticleDto {
   @IsOptional()
   published?: boolean;
 
-  @ApiProperty({ example: ['typescript', 'nestjs'], type: [String], required: false })
+  @ApiProperty({
+    example: ['typescript', 'nestjs'],
+    type: [String],
+    required: false,
+  })
   @IsArray()
   @IsOptional()
   tags?: string[];

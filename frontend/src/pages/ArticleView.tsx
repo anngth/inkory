@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { useAuthStore } from "@/store/authStore";
-import api from "@/lib/api";
-import { Article, Comment } from "@/types";
-import { formatDate } from "@/lib/utils";
-import ClapButton from "@/components/ClapButton";
-import { Bookmark, MessageCircle, Eye, Edit, Trash2 } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useAuthStore } from '@/store/authStore';
+import api from '@/lib/api';
+import { Article, Comment } from '@/types';
+import { formatDate } from '@/lib/utils';
+import ClapButton from '@/components/ClapButton';
+import { Bookmark, MessageCircle, Eye, Edit, Trash2 } from 'lucide-react';
 
 export default function ArticlePage() {
   const { id } = useParams();
@@ -17,7 +17,7 @@ export default function ArticlePage() {
   const { user } = useAuthStore();
   const [article, setArticle] = useState<Article | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
-  const [newComment, setNewComment] = useState("");
+  const [newComment, setNewComment] = useState('');
   const [bookmarked, setBookmarked] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -35,7 +35,7 @@ export default function ArticlePage() {
       setArticle(response.data);
       setLoading(false);
     } catch (error) {
-      console.error("Failed to load article:", error);
+      console.error('Failed to load article:', error);
       setLoading(false);
     }
   };
@@ -45,7 +45,7 @@ export default function ArticlePage() {
       const response = await api.get<Comment[]>(`/articles/${id}/comments`);
       setComments(response.data);
     } catch (error) {
-      console.error("Failed to load comments:", error);
+      console.error('Failed to load comments:', error);
     }
   };
 
@@ -54,13 +54,13 @@ export default function ArticlePage() {
       const response = await api.get(`/bookmarks/articles/${id}/check`);
       setBookmarked(response.data.bookmarked);
     } catch (error) {
-      console.error("Failed to check bookmark:", error);
+      console.error('Failed to check bookmark:', error);
     }
   };
 
   const handleBookmark = async () => {
     if (!user) {
-      navigate("/login");
+      navigate('/login');
       return;
     }
 
@@ -68,7 +68,7 @@ export default function ArticlePage() {
       await api.post(`/bookmarks/articles/${id}`);
       setBookmarked(!bookmarked);
     } catch (error) {
-      console.error("Failed to toggle bookmark:", error);
+      console.error('Failed to toggle bookmark:', error);
     }
   };
 
@@ -80,21 +80,21 @@ export default function ArticlePage() {
       await api.post(`/articles/${id}/comments`, {
         content: newComment,
       });
-      setNewComment("");
+      setNewComment('');
       loadComments();
     } catch (error) {
-      console.error("Failed to post comment:", error);
+      console.error('Failed to post comment:', error);
     }
   };
 
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this article?")) return;
+    if (!confirm('Are you sure you want to delete this article?')) return;
 
     try {
       await api.delete(`/articles/${id}`);
-      navigate("/");
+      navigate('/');
     } catch (error) {
-      console.error("Failed to delete article:", error);
+      console.error('Failed to delete article:', error);
     }
   };
 
@@ -192,13 +192,13 @@ export default function ArticlePage() {
             onClick={handleBookmark}
             className={`flex items-center gap-2 px-4 py-2 border rounded-full transition ${
               bookmarked
-                ? "bg-yellow-50 border-yellow-500"
-                : "hover:bg-gray-100"
+                ? 'bg-yellow-50 border-yellow-500'
+                : 'hover:bg-gray-100'
             }`}
           >
             <Bookmark
               size={20}
-              className={bookmarked ? "fill-yellow-500" : ""}
+              className={bookmarked ? 'fill-yellow-500' : ''}
             />
           </button>
           <div className="flex items-center gap-2 text-gray-600">
@@ -217,7 +217,7 @@ export default function ArticlePage() {
             remarkPlugins={[remarkGfm]}
             components={{
               code({ node, inline, className, children, ...props }: any) {
-                const match = /language-(\w+)/.exec(className || "");
+                const match = /language-(\w+)/.exec(className || '');
                 return !inline && match ? (
                   <SyntaxHighlighter
                     style={tomorrow}
@@ -225,7 +225,7 @@ export default function ArticlePage() {
                     PreTag="div"
                     {...props}
                   >
-                    {String(children).replace(/\n$/, "")}
+                    {String(children).replace(/\n$/, '')}
                   </SyntaxHighlighter>
                 ) : (
                   <code className={className} {...props}>
@@ -242,7 +242,7 @@ export default function ArticlePage() {
         {/* Tags */}
         {article.tags && article.tags.length > 0 && (
           <div className="flex gap-2 mb-8 flex-wrap">
-            {article.tags.map((tag) => (
+            {article.tags.map(tag => (
               <Link
                 key={tag.id}
                 to={`/tag/${tag.name}`}
@@ -264,7 +264,7 @@ export default function ArticlePage() {
             <form onSubmit={handleComment} className="mb-8">
               <textarea
                 value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
+                onChange={e => setNewComment(e.target.value)}
                 placeholder="Write a comment..."
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent resize-none"
                 rows={3}
@@ -285,14 +285,14 @@ export default function ArticlePage() {
                   className="text-black font-medium hover:underline"
                 >
                   Sign in
-                </Link>{" "}
+                </Link>{' '}
                 to leave a comment
               </p>
             </div>
           )}
 
           <div className="space-y-6">
-            {comments.map((comment) => (
+            {comments.map(comment => (
               <div key={comment.id} className="flex gap-3">
                 {comment.author.avatar ? (
                   <img

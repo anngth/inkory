@@ -1,6 +1,6 @@
-import { Link, useLocation } from "react-router-dom";
-import { useAuthStore } from "@/store/authStore";
-import { PenSquare, User, LogOut, Bookmark, Search } from "lucide-react";
+import { Link, useLocation } from 'react-router-dom';
+import { useAuthStore } from '@/store/authStore';
+import { PenSquare, User, LogOut, Bookmark, Search } from 'lucide-react';
 
 export default function Header() {
   const location = useLocation();
@@ -19,13 +19,13 @@ export default function Header() {
             <nav className="hidden md:flex items-center gap-6">
               <Link
                 to="/"
-                className={`text-sm ${pathname === "/" ? "text-black" : "text-gray-600 hover:text-black"}`}
+                className={`text-sm ${pathname === '/' ? 'text-black' : 'text-gray-600 hover:text-black'}`}
               >
                 Home
               </Link>
               <Link
                 to="/feed"
-                className={`text-sm ${pathname === "/feed" ? "text-black" : "text-gray-600 hover:text-black"}`}
+                className={`text-sm ${pathname === '/feed' ? 'text-black' : 'text-gray-600 hover:text-black'}`}
               >
                 Feed
               </Link>

@@ -18,7 +18,7 @@ export class Tag {
   @Column({ nullable: true })
   description: string;
 
-  @ManyToMany(() => Article, (article) => article.tags)
+  @ManyToMany(() => Article, article => article.tags)
   articles: Article[];
 
   @CreateDateColumn()

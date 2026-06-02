@@ -1,7 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Article } from "@/types";
-import { formatDate } from "@/lib/utils";
-import { Eye, MessageCircle } from "lucide-react";
+import { Link, useNavigate } from 'react-router-dom';
+import { Article } from '@/types';
+import { formatDate } from '@/lib/utils';
+import { Eye, MessageCircle } from 'lucide-react';
 
 interface ArticleCardProps {
   article: Article;
@@ -15,7 +15,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === " ") {
+    if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       navigate(`/article/${article.id}`);
     }
@@ -35,7 +35,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
             <Link
               to={`/profile/${article.author.username}`}
               className="flex items-center gap-2 hover:underline"
-              onClick={(e) => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
             >
               {article.author.avatar ? (
                 <img
@@ -84,12 +84,12 @@ export default function ArticleCard({ article }: ArticleCardProps) {
 
           {article.tags && article.tags.length > 0 && (
             <div className="flex gap-2 mt-3 flex-wrap">
-              {article.tags.slice(0, 3).map((tag) => (
+              {article.tags.slice(0, 3).map(tag => (
                 <Link
                   key={tag.id}
                   to={`/tag/${tag.name}`}
                   className="text-xs bg-gray-100 px-3 py-1 rounded-full hover:bg-gray-200"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={e => e.stopPropagation()}
                 >
                   {tag.name}
                 </Link>

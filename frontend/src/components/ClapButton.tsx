@@ -10,7 +10,10 @@ interface ClapButtonProps {
   initialCount?: number;
 }
 
-export default function ClapButton({ articleId, initialCount = 0 }: ClapButtonProps) {
+export default function ClapButton({
+  articleId,
+  initialCount = 0,
+}: ClapButtonProps) {
   const { user } = useAuthStore();
   const [totalClaps, setTotalClaps] = useState(initialCount);
   const [userClaps, setUserClaps] = useState(0);
@@ -47,8 +50,8 @@ export default function ClapButton({ articleId, initialCount = 0 }: ClapButtonPr
     try {
       setIsAnimating(true);
       await api.post(`/articles/${articleId}/claps`, { count: 1 });
-      setUserClaps((prev) => prev + 1);
-      setTotalClaps((prev) => prev + 1);
+      setUserClaps(prev => prev + 1);
+      setTotalClaps(prev => prev + 1);
       setTimeout(() => setIsAnimating(false), 300);
     } catch (error) {
       console.error('Failed to clap:', error);
@@ -73,7 +76,9 @@ export default function ClapButton({ articleId, initialCount = 0 }: ClapButtonPr
         <span className="font-medium">{totalClaps}</span>
       </button>
       {user && userClaps > 0 && (
-        <span className="text-sm text-gray-500">You clapped {userClaps} time{userClaps > 1 ? 's' : ''}</span>
+        <span className="text-sm text-gray-500">
+          You clapped {userClaps} time{userClaps > 1 ? 's' : ''}
+        </span>
       )}
     </div>
   );

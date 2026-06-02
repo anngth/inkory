@@ -23,7 +23,10 @@ export class TagsController {
 
   @Get(':name')
   @ApiOperation({ summary: 'Get tag by name with articles' })
-  async findOne(@Param('name') name: string, @Query() query: PaginationQueryDto) {
+  async findOne(
+    @Param('name') name: string,
+    @Query() query: PaginationQueryDto,
+  ) {
     return this.tagsService.findOne(name, query.page, query.limit);
   }
 }

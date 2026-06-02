@@ -22,11 +22,11 @@ export class Bookmark {
   @Column()
   articleId: string;
 
-  @ManyToOne(() => User, (user) => user.bookmarks)
+  @ManyToOne(() => User, user => user.bookmarks)
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @ManyToOne(() => Article, (article) => article.bookmarks)
+  @ManyToOne(() => Article, article => article.bookmarks)
   @JoinColumn({ name: 'articleId' })
   article: Article;
 

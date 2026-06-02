@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Follow } from '../entities/follow.entity';
@@ -48,10 +52,12 @@ export class FollowsService {
   async getFollowers(userId: string) {
     const follows = await this.followRepository.find({
       where: { followingId: userId },
-      relations: ['follower'],
+      relations: {
+        follower: true,
+      },
     });
 
-    return follows.map((follow) => {
+    return follows.map(follow => {
       const { password, ...user } = follow.follower;
       return user;
     });
@@ -60,10 +66,12 @@ export class FollowsService {
   async getFollowing(userId: string) {
     const follows = await this.followRepository.find({
       where: { followerId: userId },
-      relations: ['following'],
+      relations: {
+        following: true,
+      },
     });
 
-    return follows.map((follow) => {
+    return follows.map(follow => {
       const { password, ...user } = follow.following;
       return user;
     });

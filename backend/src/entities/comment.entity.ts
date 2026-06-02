@@ -24,11 +24,11 @@ export class Comment {
   @Column()
   articleId: string;
 
-  @ManyToOne(() => User, (user) => user.comments, { eager: true })
+  @ManyToOne(() => User, user => user.comments, { eager: true })
   @JoinColumn({ name: 'authorId' })
   author: User;
 
-  @ManyToOne(() => Article, (article) => article.comments)
+  @ManyToOne(() => Article, article => article.comments)
   @JoinColumn({ name: 'articleId' })
   article: Article;
 

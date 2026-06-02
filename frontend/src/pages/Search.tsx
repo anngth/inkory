@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
-import api from "@/lib/api";
-import { Article, PaginatedResponse } from "@/types";
-import ArticleCard from "@/components/ArticleCard";
-import { Search as SearchIcon } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import api from '@/lib/api';
+import { Article, PaginatedResponse } from '@/types';
+import ArticleCard from '@/components/ArticleCard';
+import { Search as SearchIcon } from 'lucide-react';
 
 export default function SearchPage() {
   const [searchParams] = useSearchParams();
-  const [query, setQuery] = useState(searchParams.get("q") || "");
+  const [query, setQuery] = useState(searchParams.get('q') || '');
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
@@ -21,7 +21,7 @@ export default function SearchPage() {
 
     try {
       const response = await api.get<PaginatedResponse<Article>>(
-        "/articles/search",
+        '/articles/search',
         {
           params: { q: query, page: 1, limit: 20 },
         },
@@ -29,15 +29,15 @@ export default function SearchPage() {
 
       setArticles(response.data.data);
     } catch (error) {
-      console.error("Failed to search:", error);
+      console.error('Failed to search:', error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (searchParams.get("q")) {
-      handleSearch(new Event("submit") as any);
+    if (searchParams.get('q')) {
+      handleSearch(new Event('submit') as any);
     }
   }, []);
 
@@ -51,7 +51,7 @@ export default function SearchPage() {
             <input
               type="text"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={e => setQuery(e.target.value)}
               placeholder="Search for articles..."
               className="w-full px-6 py-4 pr-12 text-lg border border-gray-300 rounded-full focus:ring-2 focus:ring-black focus:border-transparent"
             />
@@ -66,7 +66,7 @@ export default function SearchPage() {
 
         {loading ? (
           <div className="animate-pulse space-y-8">
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3].map(i => (
               <div key={i} className="border-b pb-8">
                 <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
                 <div className="h-8 bg-gray-200 rounded w-3/4 mb-2"></div>
@@ -85,10 +85,10 @@ export default function SearchPage() {
             <div>
               <p className="text-gray-600 mb-6">
                 Found {articles.length} article
-                {articles.length !== 1 ? "s" : ""}
+                {articles.length !== 1 ? 's' : ''}
               </p>
               <div className="space-y-0">
-                {articles.map((article) => (
+                {articles.map(article => (
                   <ArticleCard key={article.id} article={article} />
                 ))}
               </div>

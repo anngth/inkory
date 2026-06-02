@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/store/authStore";
-import api from "@/lib/api";
-import { User, Article, PaginatedResponse } from "@/types";
-import ArticleCard from "@/components/ArticleCard";
-import { UserPlus, UserMinus, Settings } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@/store/authStore';
+import api from '@/lib/api';
+import { User, Article, PaginatedResponse } from '@/types';
+import ArticleCard from '@/components/ArticleCard';
+import { UserPlus, UserMinus, Settings } from 'lucide-react';
 
 export default function ProfilePage() {
   const { username } = useParams();
@@ -32,7 +32,7 @@ export default function ProfilePage() {
       setUser(response.data);
       setLoading(false);
     } catch (error) {
-      console.error("Failed to load profile:", error);
+      console.error('Failed to load profile:', error);
       setLoading(false);
     }
   };
@@ -46,7 +46,7 @@ export default function ProfilePage() {
       );
       setArticles(response.data.data);
     } catch (error) {
-      console.error("Failed to load articles:", error);
+      console.error('Failed to load articles:', error);
     }
   };
 
@@ -55,13 +55,13 @@ export default function ProfilePage() {
       const response = await api.get(`/follows/users/${user?.id}/check`);
       setFollowing(response.data.following);
     } catch (error) {
-      console.error("Failed to check following:", error);
+      console.error('Failed to check following:', error);
     }
   };
 
   const handleFollow = async () => {
     if (!currentUser) {
-      navigate("/login");
+      navigate('/login');
       return;
     }
 
@@ -70,7 +70,7 @@ export default function ProfilePage() {
       setFollowing(!following);
       loadProfile();
     } catch (error) {
-      console.error("Failed to toggle follow:", error);
+      console.error('Failed to toggle follow:', error);
     }
   };
 
@@ -119,19 +119,19 @@ export default function ProfilePage() {
                   <span>
                     <strong className="text-black">
                       {user.followersCount || 0}
-                    </strong>{" "}
+                    </strong>{' '}
                     Followers
                   </span>
                   <span>
                     <strong className="text-black">
                       {user.followingCount || 0}
-                    </strong>{" "}
+                    </strong>{' '}
                     Following
                   </span>
                   <span>
                     <strong className="text-black">
                       {user.articlesCount || 0}
-                    </strong>{" "}
+                    </strong>{' '}
                     Articles
                   </span>
                 </div>
@@ -140,7 +140,7 @@ export default function ProfilePage() {
 
             {isOwnProfile ? (
               <button
-                onClick={() => navigate("/settings")}
+                onClick={() => navigate('/settings')}
                 className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-50"
               >
                 <Settings size={18} />
@@ -152,8 +152,8 @@ export default function ProfilePage() {
                   onClick={handleFollow}
                   className={`flex items-center gap-2 px-4 py-2 rounded-full transition ${
                     following
-                      ? "border border-gray-300 hover:bg-gray-50"
-                      : "bg-black text-white hover:bg-gray-800"
+                      ? 'border border-gray-300 hover:bg-gray-50'
+                      : 'bg-black text-white hover:bg-gray-800'
                   }`}
                 >
                   {following ? (
@@ -176,7 +176,7 @@ export default function ProfilePage() {
         {/* Articles */}
         <div>
           <h2 className="text-2xl font-bold mb-6">
-            {isOwnProfile ? "Your Articles" : `Articles by ${user.username}`}
+            {isOwnProfile ? 'Your Articles' : `Articles by ${user.username}`}
           </h2>
 
           {articles.length === 0 ? (
@@ -189,7 +189,7 @@ export default function ProfilePage() {
             </div>
           ) : (
             <div className="space-y-0">
-              {articles.map((article) => (
+              {articles.map(article => (
                 <ArticleCard key={article.id} article={article} />
               ))}
             </div>

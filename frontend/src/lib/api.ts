@@ -1,17 +1,17 @@
-import axios from "axios";
+import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 export const api = axios.create({
   baseURL: API_URL,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
 // Add token to requests
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+api.interceptors.request.use(config => {
+  const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -20,20 +20,20 @@ api.interceptors.request.use((config) => {
 
 // Handle response errors
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  response => response,
+  error => {
     if (error.response?.status === 401) {
-      const requestUrl = error.config?.url || "";
+      const requestUrl = error.config?.url || '';
       const currentPath = window.location.pathname;
 
       // Don't redirect if this is a login request or already on login page
-      const isLoginRequest = requestUrl.includes("/auth/login");
-      const isOnLoginPage = currentPath === "/login";
+      const isLoginRequest = requestUrl.includes('/auth/login');
+      const isOnLoginPage = currentPath === '/login';
 
       if (!isLoginRequest && !isOnLoginPage) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        window.location.href = "/login";
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
       }
     }
     return Promise.reject(error);

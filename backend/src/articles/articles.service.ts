@@ -35,7 +35,7 @@ export class ArticlesService {
     // Handle tags
     if (tagNames && tagNames.length > 0) {
       const tags = await Promise.all(
-        tagNames.map(async (tagName) => {
+        tagNames.map(async tagName => {
           let tag = await this.tagRepository.findOne({
             where: { name: tagName.toLowerCase() },
           });
@@ -61,7 +61,12 @@ export class ArticlesService {
     const queryBuilder = this.articleRepository
       .createQueryBuilder('article')
       .leftJoin('article.author', 'author')
-      .addSelect(['author.id', 'author.username', 'author.avatar', 'author.bio'])
+      .addSelect([
+        'author.id',
+        'author.username',
+        'author.avatar',
+        'author.bio',
+      ])
       .leftJoinAndSelect('article.tags', 'tags')
       .leftJoin('article.claps', 'claps')
       .addSelect('COALESCE(SUM(claps.count), 0)', 'clapsCount')
@@ -113,11 +118,16 @@ export class ArticlesService {
     const article = await this.articleRepository
       .createQueryBuilder('article')
       .leftJoin('article.author', 'author')
-      .addSelect(['author.id', 'author.username', 'author.avatar', 'author.bio'])
+      .addSelect([
+        'author.id',
+        'author.username',
+        'author.avatar',
+        'author.bio',
+      ])
       .leftJoinAndSelect('article.tags', 'tags')
       .leftJoin('article.claps', 'claps')
       .addSelect('COALESCE(SUM(claps.count), 0)', 'clapsCount')
-      .loadRelationCountAndMap('article.commentsCount', 'article.comments')
+      .loadRelationIdAndMap('article.commentsCount', 'article.comments')
       .where('article.id = :id', { id })
       .groupBy('article.id')
       .addGroupBy('author.id')
@@ -137,14 +147,12 @@ export class ArticlesService {
     };
   }
 
-  async update(
-    id: string,
-    userId: string,
-    updateArticleDto: UpdateArticleDto,
-  ) {
+  async update(id: string, userId: string, updateArticleDto: UpdateArticleDto) {
     const article = await this.articleRepository.findOne({
       where: { id },
-      relations: ['tags'],
+      relations: {
+        tags: true,
+      },
     });
 
     if (!article) {
@@ -168,7 +176,7 @@ export class ArticlesService {
     // Handle tags update
     if (tagNames) {
       const tags = await Promise.all(
-        tagNames.map(async (tagName) => {
+        tagNames.map(async tagName => {
           let tag = await this.tagRepository.findOne({
             where: { name: tagName.toLowerCase() },
           });
@@ -212,7 +220,12 @@ export class ArticlesService {
     const queryBuilder = this.articleRepository
       .createQueryBuilder('article')
       .leftJoin('article.author', 'author')
-      .addSelect(['author.id', 'author.username', 'author.avatar', 'author.bio'])
+      .addSelect([
+        'author.id',
+        'author.username',
+        'author.avatar',
+        'author.bio',
+      ])
       .leftJoinAndSelect('article.tags', 'tags')
       .leftJoin('article.claps', 'claps')
       .addSelect('COALESCE(SUM(claps.count), 0)', 'clapsCount')
@@ -252,7 +265,12 @@ export class ArticlesService {
     const queryBuilder = this.articleRepository
       .createQueryBuilder('article')
       .leftJoin('article.author', 'author')
-      .addSelect(['author.id', 'author.username', 'author.avatar', 'author.bio'])
+      .addSelect([
+        'author.id',
+        'author.username',
+        'author.avatar',
+        'author.bio',
+      ])
       .leftJoinAndSelect('article.tags', 'tags')
       .leftJoin('article.claps', 'claps')
       .addSelect('COALESCE(SUM(claps.count), 0)', 'clapsCount')
@@ -302,7 +320,12 @@ export class ArticlesService {
     const queryBuilder = this.articleRepository
       .createQueryBuilder('article')
       .leftJoin('article.author', 'author')
-      .addSelect(['author.id', 'author.username', 'author.avatar', 'author.bio'])
+      .addSelect([
+        'author.id',
+        'author.username',
+        'author.avatar',
+        'author.bio',
+      ])
       .leftJoinAndSelect('article.tags', 'tags')
       .leftJoin('article.claps', 'claps')
       .addSelect('COALESCE(SUM(claps.count), 0)', 'clapsCount')

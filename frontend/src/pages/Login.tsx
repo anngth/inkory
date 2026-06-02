@@ -1,27 +1,27 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useAuthStore } from "@/store/authStore";
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuthStore } from '@/store/authStore';
 
 export default function Login() {
   const navigate = useNavigate();
-  const login = useAuthStore((state) => state.login);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const login = useAuthStore(state => state.login);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setError('');
     setLoading(true);
 
     try {
       await login(email, password);
-      navigate("/");
+      navigate('/');
     } catch (err: any) {
       setError(
         err.response?.data?.message ||
-          "Failed to login. Please check your credentials.",
+          'Failed to login. Please check your credentials.',
       );
     } finally {
       setLoading(false);
@@ -51,7 +51,7 @@ export default function Login() {
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               required
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
               placeholder="your@email.com"
@@ -69,7 +69,7 @@ export default function Login() {
               id="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
               required
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
               placeholder="••••••••"
@@ -81,12 +81,12 @@ export default function Login() {
             disabled={loading}
             className="w-full py-3 bg-black text-white rounded-full hover:bg-gray-800 transition disabled:opacity-50 font-medium"
           >
-            {loading ? "Signing in..." : "Sign in"}
+            {loading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
         <p className="text-center mt-6 text-gray-600">
-          Don't have an account?{" "}
+          Don't have an account?{' '}
           <Link
             to="/register"
             className="text-black font-medium hover:underline"

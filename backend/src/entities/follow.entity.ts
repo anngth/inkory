@@ -21,11 +21,11 @@ export class Follow {
   @Column()
   followingId: string;
 
-  @ManyToOne(() => User, (user) => user.following)
+  @ManyToOne(() => User, user => user.following)
   @JoinColumn({ name: 'followerId' })
   follower: User;
 
-  @ManyToOne(() => User, (user) => user.followers)
+  @ManyToOne(() => User, user => user.followers)
   @JoinColumn({ name: 'followingId' })
   following: User;
 

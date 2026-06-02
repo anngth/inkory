@@ -40,21 +40,21 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => Article, (article) => article.author)
+  @OneToMany(() => Article, article => article.author)
   articles: Article[];
 
-  @OneToMany(() => Comment, (comment) => comment.author)
+  @OneToMany(() => Comment, comment => comment.author)
   comments: Comment[];
 
-  @OneToMany(() => Clap, (clap) => clap.user)
+  @OneToMany(() => Clap, clap => clap.user)
   claps: Clap[];
 
-  @OneToMany(() => Bookmark, (bookmark) => bookmark.user)
+  @OneToMany(() => Bookmark, bookmark => bookmark.user)
   bookmarks: Bookmark[];
 
-  @OneToMany(() => Follow, (follow) => follow.follower)
+  @OneToMany(() => Follow, follow => follow.follower)
   following: Follow[];
 
-  @OneToMany(() => Follow, (follow) => follow.following)
+  @OneToMany(() => Follow, follow => follow.following)
   followers: Follow[];
 }

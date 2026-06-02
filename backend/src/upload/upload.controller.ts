@@ -5,17 +5,17 @@ import {
   UploadedFile,
   UseGuards,
   BadRequestException,
-} from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiTags,
   ApiOperation,
   ApiBearerAuth,
   ApiConsumes,
-} from "@nestjs/swagger";
-import { UploadService } from "./upload.service";
-import { JwtAuthGuard } from "../auth/jwt-auth.guard";
-import { MulterFile } from "./upload.types";
+} from '@nestjs/swagger';
+import { UploadService } from './upload.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { MulterFile } from './upload.types';
 
 interface ControllerMulterFile extends MulterFile {
   size: number;
@@ -62,18 +62,18 @@ function validateImageMagicBytes(buffer: Buffer): boolean {
   return false;
 }
 
-@ApiTags("upload")
-@Controller("upload")
+@ApiTags('upload')
+@Controller('upload')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class UploadController {
   constructor(private uploadService: UploadService) {}
 
-  @Post("image")
-  @ApiOperation({ summary: "Upload an image" })
-  @ApiConsumes("multipart/form-data")
+  @Post('image')
+  @ApiOperation({ summary: 'Upload an image' })
+  @ApiConsumes('multipart/form-data')
   @UseInterceptors(
-    FileInterceptor("image", {
+    FileInterceptor('image', {
       limits: {
         fileSize: 5 * 1024 * 1024, // 5MB
         files: 1,
@@ -81,15 +81,15 @@ export class UploadController {
       fileFilter: (req, file, callback) => {
         // Validate MIME type
         const allowedMimeTypes = [
-          "image/jpeg",
-          "image/png",
-          "image/gif",
-          "image/webp",
+          'image/jpeg',
+          'image/png',
+          'image/gif',
+          'image/webp',
         ];
         if (!allowedMimeTypes.includes(file.mimetype)) {
           return callback(
             new BadRequestException(
-              "Invalid file type. Only images are allowed",
+              'Invalid file type. Only images are allowed',
             ),
             false,
           );
@@ -100,13 +100,13 @@ export class UploadController {
   )
   async uploadImage(@UploadedFile() file: ControllerMulterFile) {
     if (!file) {
-      throw new BadRequestException("No file uploaded");
+      throw new BadRequestException('No file uploaded');
     }
 
     // Validate magic bytes to ensure it's actually an image
     if (!validateImageMagicBytes(file.buffer)) {
       throw new BadRequestException(
-        "Invalid file format. File does not match image signature",
+        'Invalid file format. File does not match image signature',
       );
     }
 
@@ -114,7 +114,7 @@ export class UploadController {
 
     return {
       url,
-      message: "Image uploaded successfully",
+      message: 'Image uploaded successfully',
     };
   }
 }

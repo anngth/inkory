@@ -45,20 +45,20 @@ export class Article {
   @Column()
   authorId: string;
 
-  @ManyToOne(() => User, (user) => user.articles, { eager: true })
+  @ManyToOne(() => User, user => user.articles, { eager: true })
   @JoinColumn({ name: 'authorId' })
   author: User;
 
-  @OneToMany(() => Comment, (comment) => comment.article)
+  @OneToMany(() => Comment, comment => comment.article)
   comments: Comment[];
 
-  @OneToMany(() => Clap, (clap) => clap.article)
+  @OneToMany(() => Clap, clap => clap.article)
   claps: Clap[];
 
-  @OneToMany(() => Bookmark, (bookmark) => bookmark.article)
+  @OneToMany(() => Bookmark, bookmark => bookmark.article)
   bookmarks: Bookmark[];
 
-  @ManyToMany(() => Tag, (tag) => tag.articles)
+  @ManyToMany(() => Tag, tag => tag.articles)
   @JoinTable({
     name: 'article_tags',
     joinColumn: { name: 'articleId', referencedColumnName: 'id' },
