@@ -1,12 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { v2 as cloudinary } from "cloudinary";
 import { Readable } from "stream";
-
-interface MulterFile {
-  buffer: Buffer;
-  originalname: string;
-  mimetype: string;
-}
+import { MulterFile } from "./upload.types";
 
 @Injectable()
 export class UploadService {
