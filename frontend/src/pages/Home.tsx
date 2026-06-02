@@ -20,6 +20,9 @@ export default function Home() {
   }, [page]);
 
   const loadArticles = async () => {
+    if (loading) return;
+
+    setLoading(true);
     try {
       const response = await api.get<PaginatedResponse<Article>>('/articles', {
         params: { page, limit: 10 },
@@ -29,9 +32,9 @@ export default function Home() {
         page === 1 ? response.data.data : [...prev, ...response.data.data],
       );
       setHasMore(page < response.data.meta.totalPages);
-      setLoading(false);
     } catch (error) {
       console.error('Failed to load articles:', error);
+    } finally {
       setLoading(false);
     }
   };
@@ -48,6 +51,7 @@ export default function Home() {
   };
 
   const loadMore = () => {
+    if (loading || !hasMore) return;
     setPage(prev => prev + 1);
   };
 
@@ -102,9 +106,10 @@ export default function Home() {
                   <div className="text-center mt-8">
                     <button
                       onClick={loadMore}
-                      className="px-6 py-3 border border-gray-300 rounded-full hover:bg-gray-50 transition"
+                      disabled={loading}
+                      className="px-6 py-3 border border-gray-300 rounded-full hover:bg-gray-50 transition disabled:opacity-50"
                     >
-                      Load More
+                      {loading ? 'Loading...' : 'Load More'}
                     </button>
                   </div>
                 )}

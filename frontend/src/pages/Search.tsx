@@ -12,9 +12,8 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!query.trim()) return;
+  const fetchArticlesForQuery = async (queryString: string) => {
+    if (!queryString.trim()) return;
 
     setLoading(true);
     setSearched(true);
@@ -23,7 +22,7 @@ export default function SearchPage() {
       const response = await api.get<PaginatedResponse<Article>>(
         '/articles/search',
         {
-          params: { q: query, page: 1, limit: 20 },
+          params: { q: queryString, page: 1, limit: 20 },
         },
       );
 
@@ -35,11 +34,18 @@ export default function SearchPage() {
     }
   };
 
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    fetchArticlesForQuery(query);
+  };
+
   useEffect(() => {
-    if (searchParams.get('q')) {
-      handleSearch(new Event('submit') as any);
+    const q = searchParams.get('q');
+    if (q) {
+      setQuery(q);
+      fetchArticlesForQuery(q);
     }
-  }, []);
+  }, [searchParams]);
 
   return (
     <div className="container mx-auto px-4 py-8">

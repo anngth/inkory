@@ -14,6 +14,7 @@ export default function ProfilePage() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [following, setFollowing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [articlesLoading, setArticlesLoading] = useState(true);
 
   useEffect(() => {
     loadProfile();
@@ -38,6 +39,7 @@ export default function ProfilePage() {
   };
 
   const loadArticles = async () => {
+    setArticlesLoading(true);
     try {
       const userResponse = await api.get<User>(`/users/${username}`);
       const response = await api.get<PaginatedResponse<Article>>(
@@ -47,6 +49,8 @@ export default function ProfilePage() {
       setArticles(response.data.data);
     } catch (error) {
       console.error('Failed to load articles:', error);
+    } finally {
+      setArticlesLoading(false);
     }
   };
 
@@ -179,7 +183,16 @@ export default function ProfilePage() {
             {isOwnProfile ? 'Your Articles' : `Articles by ${user.username}`}
           </h2>
 
-          {articles.length === 0 ? (
+          {articlesLoading ? (
+            <div className="animate-pulse space-y-8">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="border-b pb-8">
+                  <div className="h-8 bg-gray-200 rounded w-3/4 mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-full"></div>
+                </div>
+              ))}
+            </div>
+          ) : articles.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-500 text-lg">
                 {isOwnProfile

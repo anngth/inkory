@@ -20,6 +20,7 @@ export default function EditArticlePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -54,6 +55,7 @@ export default function EditArticlePage() {
       setLoading(false);
     } catch (error) {
       console.error('Failed to load article:', error);
+      setFetchError(true);
       setLoading(false);
     }
   };
@@ -107,6 +109,35 @@ export default function EditArticlePage() {
 
   if (isLoading || loading) {
     return <div className="container mx-auto px-4 py-8">Loading...</div>;
+  }
+
+  if (fetchError) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-2xl font-bold mb-4">Article Not Found</h2>
+          <p className="text-gray-600 mb-6">
+            The article you're trying to edit could not be loaded.
+          </p>
+          <button
+            onClick={() => {
+              setFetchError(false);
+              setLoading(true);
+              loadArticle();
+            }}
+            className="px-6 py-3 bg-black text-white rounded-full hover:bg-gray-800 transition mr-4"
+          >
+            Retry
+          </button>
+          <button
+            onClick={() => navigate('/')}
+            className="px-6 py-3 border border-gray-300 rounded-full hover:bg-gray-50 transition"
+          >
+            Go Home
+          </button>
+        </div>
+      </div>
+    );
   }
 
   if (!user || !article) {
