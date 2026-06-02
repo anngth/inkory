@@ -1,30 +1,30 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/store/authStore";
-import api from "@/lib/api";
-import { Upload } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@/store/authStore';
+import api from '@/lib/api';
+import { Upload } from 'lucide-react';
 
 export default function SettingsPage() {
   const navigate = useNavigate();
   const { user, isLoading, setUser } = useAuthStore();
-  const [username, setUsername] = useState("");
-  const [bio, setBio] = useState("");
-  const [avatar, setAvatar] = useState("");
+  const [username, setUsername] = useState('');
+  const [bio, setBio] = useState('');
+  const [avatar, setAvatar] = useState('');
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     if (!isLoading && !user) {
-      navigate("/login");
+      navigate('/login');
     }
   }, [user, isLoading, navigate]);
 
   useEffect(() => {
     if (user) {
       setUsername(user.username);
-      setBio(user.bio || "");
-      setAvatar(user.avatar || "");
+      setBio(user.bio || '');
+      setAvatar(user.avatar || '');
     }
   }, [user]);
 
@@ -34,14 +34,14 @@ export default function SettingsPage() {
 
     setUploading(true);
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append('image', file);
 
     try {
-      const response = await api.post("/upload/image", formData);
+      const response = await api.post('/upload/image', formData);
       setAvatar(response.data.url);
     } catch (error) {
-      console.error("Failed to upload avatar:", error);
-      alert("Failed to upload avatar");
+      console.error('Failed to upload avatar:', error);
+      alert('Failed to upload avatar');
     } finally {
       setUploading(false);
     }
@@ -50,25 +50,25 @@ export default function SettingsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setMessage("");
+    setMessage('');
 
     try {
-      const response = await api.put("/users/profile", {
+      const response = await api.put('/users/profile', {
         username,
         bio: bio || undefined,
         avatar: avatar || undefined,
       });
 
       setUser(response.data);
-      localStorage.setItem("user", JSON.stringify(response.data));
-      setMessage("Profile updated successfully!");
+      localStorage.setItem('user', JSON.stringify(response.data));
+      setMessage('Profile updated successfully!');
 
       setTimeout(() => {
         navigate(`/profile/${response.data.username}`);
       }, 1500);
     } catch (error: any) {
-      console.error("Failed to update profile:", error);
-      setMessage(error.response?.data?.message || "Failed to update profile");
+      console.error('Failed to update profile:', error);
+      setMessage(error.response?.data?.message || 'Failed to update profile');
     } finally {
       setLoading(false);
     }
@@ -87,9 +87,9 @@ export default function SettingsPage() {
           {message && (
             <div
               className={`px-4 py-3 rounded ${
-                message.includes("success")
-                  ? "bg-green-50 border border-green-200 text-green-700"
-                  : "bg-red-50 border border-red-200 text-red-700"
+                message.includes('success')
+                  ? 'bg-green-50 border border-green-200 text-green-700'
+                  : 'bg-red-50 border border-red-200 text-red-700'
               }`}
             >
               {message}
@@ -113,7 +113,7 @@ export default function SettingsPage() {
               )}
               <label className="cursor-pointer px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-50 flex items-center gap-2">
                 <Upload size={18} />
-                {uploading ? "Uploading..." : "Upload New"}
+                {uploading ? 'Uploading...' : 'Upload New'}
                 <input
                   type="file"
                   className="hidden"
@@ -125,7 +125,7 @@ export default function SettingsPage() {
               {avatar && (
                 <button
                   type="button"
-                  onClick={() => setAvatar("")}
+                  onClick={() => setAvatar('')}
                   className="text-red-600 hover:text-red-700"
                 >
                   Remove
@@ -146,7 +146,7 @@ export default function SettingsPage() {
               id="username"
               type="text"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={e => setUsername(e.target.value)}
               required
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
             />
@@ -160,7 +160,7 @@ export default function SettingsPage() {
             <textarea
               id="bio"
               value={bio}
-              onChange={(e) => setBio(e.target.value)}
+              onChange={e => setBio(e.target.value)}
               rows={4}
               placeholder="Tell us about yourself..."
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent resize-none"
@@ -188,7 +188,7 @@ export default function SettingsPage() {
               disabled={loading}
               className="px-8 py-3 bg-black text-white rounded-full hover:bg-gray-800 transition disabled:opacity-50 font-medium"
             >
-              {loading ? "Saving..." : "Save Changes"}
+              {loading ? 'Saving...' : 'Save Changes'}
             </button>
             <button
               type="button"

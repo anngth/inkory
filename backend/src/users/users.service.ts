@@ -14,7 +14,11 @@ export class UsersService {
   async getProfile(userId: string) {
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      relations: ['articles', 'followers', 'following'],
+      relations: {
+        articles: true,
+        followers: true,
+        following: true,
+      },
     });
 
     if (!user) {
@@ -57,9 +61,9 @@ export class UsersService {
         'user.avatar',
         'user.createdAt',
       ])
-      .loadRelationCountAndMap('user.followersCount', 'user.followers')
-      .loadRelationCountAndMap('user.followingCount', 'user.following')
-      .loadRelationCountAndMap('user.articlesCount', 'user.articles')
+      .loadRelationIdAndMap('user.followersCount', 'user.followers')
+      .loadRelationIdAndMap('user.followingCount', 'user.following')
+      .loadRelationIdAndMap('user.articlesCount', 'user.articles')
       .where('user.username = :username', { username })
       .getOne();
 

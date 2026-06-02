@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import api from "@/lib/api";
-import { Article, PaginatedResponse } from "@/types";
-import ArticleCard from "@/components/ArticleCard";
-import { Tag } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import api from '@/lib/api';
+import { Article, PaginatedResponse } from '@/types';
+import ArticleCard from '@/components/ArticleCard';
+import { Tag } from 'lucide-react';
 
 export default function TagPage() {
   const { name } = useParams();
@@ -19,23 +19,23 @@ export default function TagPage() {
 
   const loadArticles = async () => {
     try {
-      const response = await api.get<PaginatedResponse<Article>>("/articles", {
+      const response = await api.get<PaginatedResponse<Article>>('/articles', {
         params: { tag: tagName, page, limit: 10 },
       });
 
-      setArticles((prev) =>
+      setArticles(prev =>
         page === 1 ? response.data.data : [...prev, ...response.data.data],
       );
       setHasMore(page < response.data.meta.totalPages);
       setLoading(false);
     } catch (error) {
-      console.error("Failed to load articles:", error);
+      console.error('Failed to load articles:', error);
       setLoading(false);
     }
   };
 
   const loadMore = () => {
-    setPage((prev) => prev + 1);
+    setPage(prev => prev + 1);
   };
 
   if (loading) {
@@ -45,7 +45,7 @@ export default function TagPage() {
           <div className="animate-pulse">
             <div className="h-12 bg-gray-200 rounded w-1/3 mb-8"></div>
             <div className="space-y-8">
-              {[1, 2, 3].map((i) => (
+              {[1, 2, 3].map(i => (
                 <div key={i} className="border-b pb-8">
                   <div className="h-8 bg-gray-200 rounded w-3/4 mb-2"></div>
                   <div className="h-4 bg-gray-200 rounded w-full"></div>
@@ -75,7 +75,7 @@ export default function TagPage() {
         ) : (
           <>
             <div className="space-y-0">
-              {articles.map((article) => (
+              {articles.map(article => (
                 <ArticleCard key={article.id} article={article} />
               ))}
             </div>

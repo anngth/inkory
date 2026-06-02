@@ -1,21 +1,21 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/store/authStore";
-import api from "@/lib/api";
-import { Article } from "@/types";
-import MarkdownEditor from "@/components/MarkdownEditor";
-import { Image as ImageIcon } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@/store/authStore';
+import api from '@/lib/api';
+import { Article } from '@/types';
+import MarkdownEditor from '@/components/MarkdownEditor';
+import { Image as ImageIcon } from 'lucide-react';
 
 export default function EditArticlePage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, isLoading } = useAuthStore();
   const [article, setArticle] = useState<Article | null>(null);
-  const [title, setTitle] = useState("");
-  const [subtitle, setSubtitle] = useState("");
-  const [content, setContent] = useState("");
-  const [coverImage, setCoverImage] = useState("");
-  const [tags, setTags] = useState("");
+  const [title, setTitle] = useState('');
+  const [subtitle, setSubtitle] = useState('');
+  const [content, setContent] = useState('');
+  const [coverImage, setCoverImage] = useState('');
+  const [tags, setTags] = useState('');
   const [published, setPublished] = useState(true);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -23,7 +23,7 @@ export default function EditArticlePage() {
 
   useEffect(() => {
     if (!isLoading && !user) {
-      navigate("/login");
+      navigate('/login');
     }
   }, [user, isLoading, navigate]);
 
@@ -39,21 +39,21 @@ export default function EditArticlePage() {
       const articleData = response.data;
 
       if (articleData.authorId !== user?.id) {
-        alert("You can only edit your own articles");
+        alert('You can only edit your own articles');
         navigate(`/article/${id}`);
         return;
       }
 
       setArticle(articleData);
       setTitle(articleData.title);
-      setSubtitle(articleData.subtitle || "");
+      setSubtitle(articleData.subtitle || '');
       setContent(articleData.content);
-      setCoverImage(articleData.coverImage || "");
-      setTags(articleData.tags?.map((tag) => tag.name).join(", ") || "");
+      setCoverImage(articleData.coverImage || '');
+      setTags(articleData.tags?.map(tag => tag.name).join(', ') || '');
       setPublished(articleData.published);
       setLoading(false);
     } catch (error) {
-      console.error("Failed to load article:", error);
+      console.error('Failed to load article:', error);
       setLoading(false);
     }
   };
@@ -64,14 +64,14 @@ export default function EditArticlePage() {
 
     setUploading(true);
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append('image', file);
 
     try {
-      const response = await api.post("/upload/image", formData);
+      const response = await api.post('/upload/image', formData);
       setCoverImage(response.data.url);
     } catch (error) {
-      console.error("Failed to upload image:", error);
-      alert("Failed to upload image");
+      console.error('Failed to upload image:', error);
+      alert('Failed to upload image');
     } finally {
       setUploading(false);
     }
@@ -83,9 +83,9 @@ export default function EditArticlePage() {
 
     try {
       const tagArray = tags
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter((tag) => tag.length > 0);
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(tag => tag.length > 0);
 
       await api.put(`/articles/${id}`, {
         title,
@@ -98,8 +98,8 @@ export default function EditArticlePage() {
 
       navigate(`/article/${id}`);
     } catch (error: any) {
-      console.error("Failed to update article:", error);
-      alert(error.response?.data?.message || "Failed to update article");
+      console.error('Failed to update article:', error);
+      alert(error.response?.data?.message || 'Failed to update article');
     } finally {
       setSaving(false);
     }
@@ -133,7 +133,7 @@ export default function EditArticlePage() {
                 />
                 <button
                   type="button"
-                  onClick={() => setCoverImage("")}
+                  onClick={() => setCoverImage('')}
                   className="absolute top-2 right-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                 >
                   Remove
@@ -148,7 +148,7 @@ export default function EditArticlePage() {
                     <>
                       <ImageIcon size={48} className="text-gray-400 mb-3" />
                       <p className="mb-2 text-sm text-gray-500">
-                        <span className="font-semibold">Click to upload</span>{" "}
+                        <span className="font-semibold">Click to upload</span>{' '}
                         cover image
                       </p>
                     </>
@@ -170,7 +170,7 @@ export default function EditArticlePage() {
             <input
               type="text"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={e => setTitle(e.target.value)}
               required
               placeholder="Article title"
               className="w-full text-4xl font-bold border-0 focus:ring-0 focus:outline-none placeholder-gray-300"
@@ -182,7 +182,7 @@ export default function EditArticlePage() {
             <input
               type="text"
               value={subtitle}
-              onChange={(e) => setSubtitle(e.target.value)}
+              onChange={e => setSubtitle(e.target.value)}
               placeholder="Article subtitle (optional)"
               className="w-full text-xl text-gray-600 border-0 focus:ring-0 focus:outline-none placeholder-gray-300"
             />
@@ -208,7 +208,7 @@ export default function EditArticlePage() {
             <input
               type="text"
               value={tags}
-              onChange={(e) => setTags(e.target.value)}
+              onChange={e => setTags(e.target.value)}
               placeholder="javascript, react, tutorial"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
             />
@@ -220,7 +220,7 @@ export default function EditArticlePage() {
               <input
                 type="checkbox"
                 checked={published}
-                onChange={(e) => setPublished(e.target.checked)}
+                onChange={e => setPublished(e.target.checked)}
                 className="w-4 h-4"
               />
               <span className="text-sm">Published</span>
@@ -234,7 +234,7 @@ export default function EditArticlePage() {
               disabled={saving || !title || !content}
               className="px-8 py-3 bg-black text-white rounded-full hover:bg-gray-800 transition disabled:opacity-50 font-medium"
             >
-              {saving ? "Saving..." : "Save Changes"}
+              {saving ? 'Saving...' : 'Save Changes'}
             </button>
             <button
               type="button"

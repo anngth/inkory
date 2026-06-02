@@ -17,6 +17,20 @@ cp .env.local.example .env.local
 npm run dev
 ```
 
+## Code Formatting
+
+This project uses [Prettier](https://prettier.io/) for consistent code formatting.
+
+```bash
+# Format backend code
+cd backend && npm run format
+
+# Format frontend code
+cd frontend && npm run format
+```
+
+See [docs/prettier.md](docs/prettier.md) for detailed configuration and editor setup.
+
 ## Documentation
 
 See [docs/index.md](docs/index.md)

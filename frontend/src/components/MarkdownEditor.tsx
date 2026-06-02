@@ -12,7 +12,11 @@ interface MarkdownEditorProps {
   placeholder?: string;
 }
 
-export default function MarkdownEditor({ value, onChange, placeholder }: MarkdownEditorProps) {
+export default function MarkdownEditor({
+  value,
+  onChange,
+  placeholder,
+}: MarkdownEditorProps) {
   const [activeTab, setActiveTab] = useState<'write' | 'preview'>('write');
 
   return (
@@ -46,7 +50,7 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
         {activeTab === 'write' ? (
           <textarea
             value={value}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             placeholder={placeholder}
             className="w-full h-full min-h-[400px] p-4 focus:outline-none resize-none font-mono text-sm"
           />

@@ -25,11 +25,11 @@ export class Clap {
   @Column()
   articleId: string;
 
-  @ManyToOne(() => User, (user) => user.claps)
+  @ManyToOne(() => User, user => user.claps)
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @ManyToOne(() => Article, (article) => article.claps)
+  @ManyToOne(() => Article, article => article.claps)
   @JoinColumn({ name: 'articleId' })
   article: Article;
 

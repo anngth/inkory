@@ -1,34 +1,34 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useAuthStore } from "@/store/authStore";
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuthStore } from '@/store/authStore';
 
 export default function Register() {
   const navigate = useNavigate();
-  const register = useAuthStore((state) => state.register);
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const register = useAuthStore(state => state.register);
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setError('');
     setLoading(true);
 
     if (password.length < 6) {
-      setError("Password must be at least 6 characters");
+      setError('Password must be at least 6 characters');
       setLoading(false);
       return;
     }
 
     try {
       await register(email, password, username);
-      navigate("/");
+      navigate('/');
     } catch (err: any) {
       setError(
         err.response?.data?.message ||
-          "Failed to create account. Please try again.",
+          'Failed to create account. Please try again.',
       );
     } finally {
       setLoading(false);
@@ -63,7 +63,7 @@ export default function Register() {
               id="username"
               type="text"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={e => setUsername(e.target.value)}
               required
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
               placeholder="johndoe"
@@ -78,7 +78,7 @@ export default function Register() {
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               required
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
               placeholder="your@email.com"
@@ -96,7 +96,7 @@ export default function Register() {
               id="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
               required
               minLength={6}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
@@ -110,12 +110,12 @@ export default function Register() {
             disabled={loading}
             className="w-full py-3 bg-black text-white rounded-full hover:bg-gray-800 transition disabled:opacity-50 font-medium"
           >
-            {loading ? "Creating account..." : "Create account"}
+            {loading ? 'Creating account...' : 'Create account'}
           </button>
         </form>
 
         <p className="text-center mt-6 text-gray-600">
-          Already have an account?{" "}
+          Already have an account?{' '}
           <Link to="/login" className="text-black font-medium hover:underline">
             Sign in
           </Link>

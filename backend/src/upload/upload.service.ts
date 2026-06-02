@@ -1,7 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { v2 as cloudinary } from "cloudinary";
-import { Readable } from "stream";
-import { MulterFile } from "./upload.types";
+import { Injectable } from '@nestjs/common';
+import { v2 as cloudinary } from 'cloudinary';
+import { Readable } from 'stream';
+import { MulterFile } from './upload.types';
 
 @Injectable()
 export class UploadService {
@@ -9,8 +9,8 @@ export class UploadService {
     return new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
-          folder: "inkory",
-          resource_type: "image",
+          folder: 'inkory',
+          resource_type: 'image',
         },
         (error, result) => {
           if (error) return reject(error);

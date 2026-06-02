@@ -17,10 +17,10 @@ export default function ArticleCard({ article }: ArticleCardProps) {
         <div className="flex gap-6">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-3">
-              <Link 
+              <Link
                 href={`/profile/${article.author.username}`}
                 className="flex items-center gap-2 hover:underline"
-                onClick={(e) => e.stopPropagation()}
+                onClick={e => e.stopPropagation()}
               >
                 {article.author.avatar ? (
                   <Image
@@ -33,14 +33,16 @@ export default function ArticleCard({ article }: ArticleCardProps) {
                 ) : (
                   <div className="w-6 h-6 bg-gray-300 rounded-full" />
                 )}
-                <span className="text-sm font-medium">{article.author.username}</span>
+                <span className="text-sm font-medium">
+                  {article.author.username}
+                </span>
               </Link>
             </div>
 
             <h2 className="text-xl font-bold mb-2 line-clamp-2">
               {article.title}
             </h2>
-            
+
             {article.subtitle && (
               <p className="text-gray-600 mb-3 line-clamp-2">
                 {article.subtitle}
@@ -69,12 +71,12 @@ export default function ArticleCard({ article }: ArticleCardProps) {
 
             {article.tags && article.tags.length > 0 && (
               <div className="flex gap-2 mt-3 flex-wrap">
-                {article.tags.slice(0, 3).map((tag) => (
+                {article.tags.slice(0, 3).map(tag => (
                   <Link
                     key={tag.id}
                     href={`/tag/${tag.name}`}
                     className="text-xs bg-gray-100 px-3 py-1 rounded-full hover:bg-gray-200"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={e => e.stopPropagation()}
                   >
                     {tag.name}
                   </Link>

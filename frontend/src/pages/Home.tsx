@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import api from "@/lib/api";
-import { Article, PaginatedResponse, Tag } from "@/types";
-import ArticleCard from "@/components/ArticleCard";
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import api from '@/lib/api';
+import { Article, PaginatedResponse, Tag } from '@/types';
+import ArticleCard from '@/components/ArticleCard';
 
 export default function Home() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -21,34 +21,34 @@ export default function Home() {
 
   const loadArticles = async () => {
     try {
-      const response = await api.get<PaginatedResponse<Article>>("/articles", {
+      const response = await api.get<PaginatedResponse<Article>>('/articles', {
         params: { page, limit: 10 },
       });
 
-      setArticles((prev) =>
+      setArticles(prev =>
         page === 1 ? response.data.data : [...prev, ...response.data.data],
       );
       setHasMore(page < response.data.meta.totalPages);
       setLoading(false);
     } catch (error) {
-      console.error("Failed to load articles:", error);
+      console.error('Failed to load articles:', error);
       setLoading(false);
     }
   };
 
   const loadPopularTags = async () => {
     try {
-      const response = await api.get<Tag[]>("/tags/popular", {
+      const response = await api.get<Tag[]>('/tags/popular', {
         params: { limit: 10 },
       });
       setPopularTags(response.data);
     } catch (error) {
-      console.error("Failed to load tags:", error);
+      console.error('Failed to load tags:', error);
     }
   };
 
   const loadMore = () => {
-    setPage((prev) => prev + 1);
+    setPage(prev => prev + 1);
   };
 
   if (loading) {
@@ -56,7 +56,7 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="animate-pulse space-y-8">
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3].map(i => (
               <div key={i} className="border-b pb-8">
                 <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
                 <div className="h-8 bg-gray-200 rounded w-3/4 mb-2"></div>
@@ -93,7 +93,7 @@ export default function Home() {
             ) : (
               <>
                 <div className="space-y-0">
-                  {articles.map((article) => (
+                  {articles.map(article => (
                     <ArticleCard key={article.id} article={article} />
                   ))}
                 </div>
@@ -119,7 +119,7 @@ export default function Home() {
                 Popular Tags
               </h2>
               <div className="flex flex-wrap gap-2">
-                {popularTags.map((tag) => (
+                {popularTags.map(tag => (
                   <Link
                     key={tag.id}
                     to={`/tag/${tag.name}`}

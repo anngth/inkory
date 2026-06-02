@@ -46,14 +46,19 @@ export class BookmarksService {
 
     const [bookmarks, total] = await this.bookmarkRepository.findAndCount({
       where: { userId },
-      relations: ['article', 'article.author', 'article.tags'],
+      relations: {
+        article: {
+          author: true,
+          tags: true,
+        },
+      },
       order: { createdAt: 'DESC' },
       skip,
       take: limit,
     });
 
     return {
-      data: bookmarks.map((bookmark) => bookmark.article),
+      data: bookmarks.map(bookmark => bookmark.article),
       meta: {
         total,
         page,

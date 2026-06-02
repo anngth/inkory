@@ -3,10 +3,10 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
-} from "@nestjs/common";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
-import { plainToInstance } from "class-transformer";
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class SerializeInterceptor implements NestInterceptor {
@@ -35,7 +35,7 @@ export function Serialize(dto: any) {
       descriptor.value = function (...args: any[]) {
         const result = originalMethod.apply(this, args);
         if (result instanceof Promise) {
-          return result.then((data) =>
+          return result.then(data =>
             plainToInstance(dto, data, { excludeExtraneousValues: true }),
           );
         }

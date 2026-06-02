@@ -1,20 +1,20 @@
-import { Routes, Route } from "react-router-dom";
-import Header from "@/components/Header";
-import AuthProvider from "@/components/AuthProvider";
+import { Routes, Route } from 'react-router-dom';
+import Header from '@/components/Header';
+import AuthProvider from '@/components/AuthProvider';
 
 // Pages
-import Home from "@/pages/Home";
-import Login from "@/pages/Login";
-import Register from "@/pages/Register";
-import Write from "@/pages/Write";
-import ArticleView from "@/pages/ArticleView";
-import ArticleEdit from "@/pages/ArticleEdit";
-import Profile from "@/pages/Profile";
-import Settings from "@/pages/Settings";
-import Feed from "@/pages/Feed";
-import Bookmarks from "@/pages/Bookmarks";
-import Search from "@/pages/Search";
-import TagView from "@/pages/TagView";
+import Home from '@/pages/Home';
+import Login from '@/pages/Login';
+import Register from '@/pages/Register';
+import Write from '@/pages/Write';
+import ArticleView from '@/pages/ArticleView';
+import ArticleEdit from '@/pages/ArticleEdit';
+import Profile from '@/pages/Profile';
+import Settings from '@/pages/Settings';
+import Feed from '@/pages/Feed';
+import Bookmarks from '@/pages/Bookmarks';
+import Search from '@/pages/Search';
+import TagView from '@/pages/TagView';
 
 function App() {
   return (

@@ -1,25 +1,25 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/store/authStore";
-import api from "@/lib/api";
-import MarkdownEditor from "@/components/MarkdownEditor";
-import { Image as ImageIcon } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@/store/authStore';
+import api from '@/lib/api';
+import MarkdownEditor from '@/components/MarkdownEditor';
+import { Image as ImageIcon } from 'lucide-react';
 
 export default function WritePage() {
   const navigate = useNavigate();
   const { user, isLoading } = useAuthStore();
-  const [title, setTitle] = useState("");
-  const [subtitle, setSubtitle] = useState("");
-  const [content, setContent] = useState("");
-  const [coverImage, setCoverImage] = useState("");
-  const [tags, setTags] = useState("");
+  const [title, setTitle] = useState('');
+  const [subtitle, setSubtitle] = useState('');
+  const [content, setContent] = useState('');
+  const [coverImage, setCoverImage] = useState('');
+  const [tags, setTags] = useState('');
   const [published, setPublished] = useState(true);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !user) {
-      navigate("/login");
+      navigate('/login');
     }
   }, [user, isLoading, navigate]);
 
@@ -29,14 +29,14 @@ export default function WritePage() {
 
     setUploading(true);
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append('image', file);
 
     try {
-      const response = await api.post("/upload/image", formData);
+      const response = await api.post('/upload/image', formData);
       setCoverImage(response.data.url);
     } catch (error) {
-      console.error("Failed to upload image:", error);
-      alert("Failed to upload image");
+      console.error('Failed to upload image:', error);
+      alert('Failed to upload image');
     } finally {
       setUploading(false);
     }
@@ -48,11 +48,11 @@ export default function WritePage() {
 
     try {
       const tagArray = tags
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter((tag) => tag.length > 0);
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(tag => tag.length > 0);
 
-      const response = await api.post("/articles", {
+      const response = await api.post('/articles', {
         title,
         subtitle: subtitle || undefined,
         content,
@@ -63,8 +63,8 @@ export default function WritePage() {
 
       navigate(`/article/${response.data.id}`);
     } catch (error: any) {
-      console.error("Failed to create article:", error);
-      alert(error.response?.data?.message || "Failed to create article");
+      console.error('Failed to create article:', error);
+      alert(error.response?.data?.message || 'Failed to create article');
     } finally {
       setLoading(false);
     }
@@ -98,7 +98,7 @@ export default function WritePage() {
                 />
                 <button
                   type="button"
-                  onClick={() => setCoverImage("")}
+                  onClick={() => setCoverImage('')}
                   className="absolute top-2 right-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                 >
                   Remove
@@ -113,7 +113,7 @@ export default function WritePage() {
                     <>
                       <ImageIcon size={48} className="text-gray-400 mb-3" />
                       <p className="mb-2 text-sm text-gray-500">
-                        <span className="font-semibold">Click to upload</span>{" "}
+                        <span className="font-semibold">Click to upload</span>{' '}
                         cover image
                       </p>
                       <p className="text-xs text-gray-500">
@@ -138,7 +138,7 @@ export default function WritePage() {
             <input
               type="text"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={e => setTitle(e.target.value)}
               required
               placeholder="Article title"
               className="w-full text-4xl font-bold border-0 focus:ring-0 focus:outline-none placeholder-gray-300"
@@ -150,7 +150,7 @@ export default function WritePage() {
             <input
               type="text"
               value={subtitle}
-              onChange={(e) => setSubtitle(e.target.value)}
+              onChange={e => setSubtitle(e.target.value)}
               placeholder="Article subtitle (optional)"
               className="w-full text-xl text-gray-600 border-0 focus:ring-0 focus:outline-none placeholder-gray-300"
             />
@@ -176,7 +176,7 @@ export default function WritePage() {
             <input
               type="text"
               value={tags}
-              onChange={(e) => setTags(e.target.value)}
+              onChange={e => setTags(e.target.value)}
               placeholder="javascript, react, tutorial"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
             />
@@ -188,7 +188,7 @@ export default function WritePage() {
               <input
                 type="checkbox"
                 checked={published}
-                onChange={(e) => setPublished(e.target.checked)}
+                onChange={e => setPublished(e.target.checked)}
                 className="w-4 h-4"
               />
               <span className="text-sm">Publish immediately</span>
@@ -203,10 +203,10 @@ export default function WritePage() {
               className="px-8 py-3 bg-black text-white rounded-full hover:bg-gray-800 transition disabled:opacity-50 font-medium"
             >
               {loading
-                ? "Publishing..."
+                ? 'Publishing...'
                 : published
-                  ? "Publish"
-                  : "Save as Draft"}
+                  ? 'Publish'
+                  : 'Save as Draft'}
             </button>
             <button
               type="button"

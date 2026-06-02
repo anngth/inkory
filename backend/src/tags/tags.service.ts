@@ -16,7 +16,7 @@ export class TagsService {
   async findAll() {
     const tags = await this.tagRepository
       .createQueryBuilder('tag')
-      .loadRelationCountAndMap('tag.articlesCount', 'tag.articles')
+      .loadRelationIdAndMap('tag.articlesCount', 'tag.articles')
       .orderBy('tag.name', 'ASC')
       .getMany();
 
@@ -63,7 +63,7 @@ export class TagsService {
       .take(limit);
 
     const articleIdsResult = await articleIdsQuery.getRawMany();
-    const articleIds = articleIdsResult.map((row) => row.article_id);
+    const articleIds = articleIdsResult.map(row => row.article_id);
 
     // Get total count using the same base filter
     const total = await this.articleRepository
@@ -91,7 +91,12 @@ export class TagsService {
     const queryBuilder = this.articleRepository
       .createQueryBuilder('article')
       .leftJoin('article.author', 'author')
-      .addSelect(['author.id', 'author.username', 'author.avatar', 'author.bio'])
+      .addSelect([
+        'author.id',
+        'author.username',
+        'author.avatar',
+        'author.bio',
+      ])
       .leftJoinAndSelect('article.tags', 'tags')
       .leftJoin('article.claps', 'claps')
       .addSelect('COALESCE(SUM(claps.count), 0)', 'clapsCount')
@@ -106,7 +111,7 @@ export class TagsService {
     // Build a lookup map from raw results keyed by article ID
     // Raw results contain one row per article×tag combination due to groupBy
     const clapsLookup = new Map<string, number>();
-    articlesResult.raw.forEach((row) => {
+    articlesResult.raw.forEach(row => {
       const articleId = row.article_id;
       if (articleId && !clapsLookup.has(articleId)) {
         clapsLookup.set(articleId, parseInt(row.clapsCount) || 0);
@@ -114,7 +119,7 @@ export class TagsService {
     });
 
     // Map clapsCount using the lookup instead of raw array index
-    const articles = articlesResult.entities.map((article) => ({
+    const articles = articlesResult.entities.map(article => ({
       ...article,
       clapsCount: clapsLookup.get(article.id) || 0,
     }));
