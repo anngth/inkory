@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import api from '@/lib/api';
@@ -12,6 +12,7 @@ export default function BookmarksPage() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const isFetchingRef = useRef(false);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -26,8 +27,9 @@ export default function BookmarksPage() {
   }, [user, page]);
 
   const loadBookmarks = async () => {
-    if (loading) return;
+    if (isFetchingRef.current) return;
 
+    isFetchingRef.current = true;
     setLoading(true);
     try {
       const response = await api.get<PaginatedResponse<Article>>('/bookmarks', {
@@ -42,6 +44,7 @@ export default function BookmarksPage() {
       console.error('Failed to load bookmarks:', error);
     } finally {
       setLoading(false);
+      isFetchingRef.current = false;
     }
   };
 
