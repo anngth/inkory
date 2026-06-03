@@ -23,6 +23,8 @@ export default function TagPage() {
       setArticles([]);
       setHasMore(true);
       setLoading(true);
+      // Return early to prevent calling loadArticles with stale page
+      return;
     }
 
     loadArticles();

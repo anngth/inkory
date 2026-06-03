@@ -10,6 +10,7 @@ export default function FeedPage() {
   const { user, isLoading } = useAuthStore();
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const inFlightRef = useRef(false);
@@ -30,7 +31,11 @@ export default function FeedPage() {
     if (inFlightRef.current) return;
 
     inFlightRef.current = true;
-    setLoading(true);
+    if (page === 1) {
+      setLoading(true);
+    } else {
+      setIsLoadingMore(true);
+    }
     try {
       const response = await api.get<PaginatedResponse<Article>>(
         '/articles/feed',
@@ -47,12 +52,13 @@ export default function FeedPage() {
       console.error('Failed to load feed:', error);
     } finally {
       setLoading(false);
+      setIsLoadingMore(false);
       inFlightRef.current = false;
     }
   };
 
   const loadMore = () => {
-    if (loading || !hasMore) return;
+    if (isLoadingMore || !hasMore) return;
     setPage(prev => prev + 1);
   };
 
@@ -102,10 +108,10 @@ export default function FeedPage() {
               <div className="text-center mt-8">
                 <button
                   onClick={loadMore}
-                  disabled={loading}
+                  disabled={isLoadingMore}
                   className="px-6 py-3 border border-gray-300 rounded-full hover:bg-gray-50 transition disabled:opacity-50"
                 >
-                  {loading ? 'Loading...' : 'Load More'}
+                  {isLoadingMore ? 'Loading...' : 'Load More'}
                 </button>
               </div>
             )}

@@ -10,6 +10,7 @@ export default function BookmarksPage() {
   const { user, isLoading } = useAuthStore();
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const isFetchingRef = useRef(false);
@@ -30,7 +31,11 @@ export default function BookmarksPage() {
     if (isFetchingRef.current) return;
 
     isFetchingRef.current = true;
-    setLoading(true);
+    if (page === 1) {
+      setLoading(true);
+    } else {
+      setIsLoadingMore(true);
+    }
     try {
       const response = await api.get<PaginatedResponse<Article>>('/bookmarks', {
         params: { page, limit: 10 },
@@ -44,12 +49,13 @@ export default function BookmarksPage() {
       console.error('Failed to load bookmarks:', error);
     } finally {
       setLoading(false);
+      setIsLoadingMore(false);
       isFetchingRef.current = false;
     }
   };
 
   const loadMore = () => {
-    if (loading || !hasMore) return;
+    if (isLoadingMore || !hasMore) return;
     setPage(prev => prev + 1);
   };
 
@@ -97,10 +103,10 @@ export default function BookmarksPage() {
               <div className="text-center mt-8">
                 <button
                   onClick={loadMore}
-                  disabled={loading}
+                  disabled={isLoadingMore}
                   className="px-6 py-3 border border-gray-300 rounded-full hover:bg-gray-50 transition disabled:opacity-50"
                 >
-                  {loading ? 'Loading...' : 'Load More'}
+                  {isLoadingMore ? 'Loading...' : 'Load More'}
                 </button>
               </div>
             )}
