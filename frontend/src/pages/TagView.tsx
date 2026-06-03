@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '@/lib/api';
 import { Article, PaginatedResponse } from '@/types';
@@ -12,29 +12,40 @@ export default function TagPage() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-
-  // Reset pagination when tag changes
-  useEffect(() => {
-    setPage(1);
-    setArticles([]);
-    setHasMore(true);
-    setLoading(true);
-  }, [tagName]);
+  const currentTagRef = useRef(tagName);
 
   useEffect(() => {
+    const tagChanged = currentTagRef.current !== tagName;
+    currentTagRef.current = tagName;
+
+    if (tagChanged) {
+      setPage(1);
+      setArticles([]);
+      setHasMore(true);
+      setLoading(true);
+    }
+
     loadArticles();
   }, [tagName, page]);
 
   const loadArticles = async () => {
+    const requestTag = tagName;
+    const requestPage = page;
+
     try {
       const response = await api.get<PaginatedResponse<Article>>('/articles', {
-        params: { tag: tagName, page, limit: 10 },
+        params: { tag: requestTag, page: requestPage, limit: 10 },
       });
 
+      // Ignore stale responses
+      if (requestTag !== currentTagRef.current) return;
+
       setArticles(prev =>
-        page === 1 ? response.data.data : [...prev, ...response.data.data],
+        requestPage === 1
+          ? response.data.data
+          : [...prev, ...response.data.data],
       );
-      setHasMore(page < response.data.meta.totalPages);
+      setHasMore(requestPage < response.data.meta.totalPages);
       setLoading(false);
     } catch (error) {
       console.error('Failed to load articles:', error);

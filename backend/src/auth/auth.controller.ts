@@ -14,6 +14,14 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
+const AUTH_COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax' as const,
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  path: '/',
+};
+
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -28,12 +36,7 @@ export class AuthController {
     const { user, token } = await this.authService.register(registerDto);
 
     // Set HttpOnly cookie
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    res.cookie('token', token, AUTH_COOKIE_OPTIONS);
 
     return { user };
   }
@@ -47,12 +50,7 @@ export class AuthController {
     const { user, token } = await this.authService.login(loginDto);
 
     // Set HttpOnly cookie
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    res.cookie('token', token, AUTH_COOKIE_OPTIONS);
 
     return { user };
   }
@@ -68,7 +66,7 @@ export class AuthController {
   @Post('logout')
   @ApiOperation({ summary: 'Logout user' })
   logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('token');
+    res.clearCookie('token', AUTH_COOKIE_OPTIONS);
     return { message: 'Logged out successfully' };
   }
 }

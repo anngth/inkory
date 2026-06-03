@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import api from '@/lib/api';
 import { Article, PaginatedResponse, Tag } from '@/types';
@@ -10,6 +10,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const inFlightRef = useRef(false);
 
   useEffect(() => {
     loadPopularTags();
@@ -20,8 +21,9 @@ export default function Home() {
   }, [page]);
 
   const loadArticles = async () => {
-    if (loading) return;
+    if (inFlightRef.current) return;
 
+    inFlightRef.current = true;
     setLoading(true);
     try {
       const response = await api.get<PaginatedResponse<Article>>('/articles', {
@@ -36,6 +38,7 @@ export default function Home() {
       console.error('Failed to load articles:', error);
     } finally {
       setLoading(false);
+      inFlightRef.current = false;
     }
   };
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import api from '@/lib/api';
@@ -12,6 +12,7 @@ export default function FeedPage() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const inFlightRef = useRef(false);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -26,8 +27,9 @@ export default function FeedPage() {
   }, [user, page]);
 
   const loadFeed = async () => {
-    if (loading) return;
+    if (inFlightRef.current) return;
 
+    inFlightRef.current = true;
     setLoading(true);
     try {
       const response = await api.get<PaginatedResponse<Article>>(
@@ -45,6 +47,7 @@ export default function FeedPage() {
       console.error('Failed to load feed:', error);
     } finally {
       setLoading(false);
+      inFlightRef.current = false;
     }
   };
 

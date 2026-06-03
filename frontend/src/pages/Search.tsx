@@ -6,7 +6,7 @@ import ArticleCard from '@/components/ArticleCard';
 import { Search as SearchIcon } from 'lucide-react';
 
 export default function SearchPage() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('q') || '');
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
@@ -36,6 +36,7 @@ export default function SearchPage() {
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSearchParams({ q: query });
     fetchArticlesForQuery(query);
   };
 

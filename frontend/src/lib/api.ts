@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useAuthStore } from '@/store/authStore';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -32,6 +33,8 @@ api.interceptors.response.use(
         !isOnLoginPage &&
         !isOnRegisterPage
       ) {
+        // Clear auth state before redirecting
+        useAuthStore.getState().setUser(null);
         window.location.href = '/login';
       }
     }
